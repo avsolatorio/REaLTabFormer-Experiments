@@ -137,6 +137,10 @@ def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac:
     part_path = data_path / f"split_{random_state}" / f"{data_id}_seed-{random_state}.pkl"
     part_path.parent.mkdir(parents=True, exist_ok=True)
 
+    if part_path.exists():
+        print(f"Data split exists: {part_path}", flush=True)
+        return
+
     if data_id == "california-housing":
         payload = load_california_housing(data_id, data_path, random_state, frac)
     elif data_id == "heloc":
