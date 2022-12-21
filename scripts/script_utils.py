@@ -44,7 +44,28 @@ def get_batch_size(data_id: str, model_type: str):
 
 
 def get_epochs(data_id: str, model_type: str):
+    assert model_type in MODEL_TYPES
+    # Default number of epochs
     epochs = 200
+
+    if model_type == "distillgreat":
+        # We fine-tune the Distill-GReaT model for each data set
+        # for 200 epochs, except for the California housing data
+        # set, for it, we fine-tune it for 100 epochs.
+        epochs = 200
+        if data_id == "california-housing":
+            epochs = 100
+    elif model_type == "great":
+        # The GReaT baseline is fine-tuned for 110, 310, 400, 255 epochs
+        # for California, Adult, Travel, and HELOC data sets, respectively.
+        if data_id == "california-housing":
+            epochs = 110
+        elif data_id == "adult-income":
+            epochs = 310
+        elif data_id == "travel-customers":
+            epochs = 400
+        elif data_id == "heloc":
+            epochs = 255
 
     return epochs
 
