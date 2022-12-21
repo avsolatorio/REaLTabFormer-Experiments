@@ -40,7 +40,7 @@ def load_california_housing(data_id: str, data_path: Path, random_state: int, fr
     )
 
 
-def load_heloc(data_id: str, data_path: Path, random_state: int, frac: float = 0.) -> dict:
+def load_heloc(data_id: str, data_path: Path, random_state: int, frac: float = 0.8) -> dict:
     raw_dir = data_path / "raw"
     _data = pd.read_csv(raw_dir / "heloc_dataset_v1.csv")
 
@@ -64,7 +64,7 @@ def load_heloc(data_id: str, data_path: Path, random_state: int, frac: float = 0
     )
 
 
-def load_adult_income(data_id: str, data_path: Path, random_state: int, frac: float = 0.) -> dict:
+def load_adult_income(data_id: str, data_path: Path, random_state: int, frac: float = 0.8) -> dict:
     raw_dir = data_path / "raw"
 
     # Extract column headers
@@ -107,7 +107,7 @@ def load_adult_income(data_id: str, data_path: Path, random_state: int, frac: fl
     )
 
 
-def load_travel_customers(data_id: str, data_path: Path, random_state: int, frac: float = 0.) -> dict:
+def load_travel_customers(data_id: str, data_path: Path, random_state: int, frac: float = 0.8) -> dict:
     raw_dir = data_path / "raw"
 
     target_col = "Target"
