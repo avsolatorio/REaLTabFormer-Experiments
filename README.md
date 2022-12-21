@@ -41,3 +41,10 @@ The following are the sources of the datasets used in the experiments:
 - **HELOC Dataset**: https://www.kaggle.com/datasets/averkiyoliabev/home-equity-line-of-creditheloc
 - **Travel Customers Dataset**: https://www.kaggle.com/datasets/tejashvi14/tour-travels-customer-churn-prediction
 - **California Housing Dataset**: https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset
+
+
+# Generating dataset splits
+
+```
+pipenv run python scripts/split_train_test.py
+```

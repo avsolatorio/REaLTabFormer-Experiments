@@ -137,7 +137,7 @@ def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac:
     part_path.parent.mkdir(parents=True, exist_ok=True)
 
     if data_id == "california-housing":
-        payload = load_california_housing(data_id, random_state, frac)
+        payload = load_california_housing(data_id, data_path, random_state, frac)
     elif data_id == "heloc":
         payload = load_heloc(data_id, data_path, random_state, frac)
     elif data_id == "adult-income":
@@ -175,7 +175,7 @@ for p in DATA_DIR.glob("*"):
 
 for data_id in data_id_path:
     for seed in [610, 1029, 1004, 2019, 2009]:
-        print(f"Generating data splits for {data_id} using seed {seed}...")
+        print(f"Generating data splits for {data_id} using seed {seed}...", flush=True)
         load_split_save_data(
             data_id=data_id,
             data_path=data_id_path[data_id],
