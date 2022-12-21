@@ -114,7 +114,7 @@ def train_sample(model_type, data_id, sample_multiple: int = 10, verbose: bool =
 
         # Generate samples
         samples = sample_great(model, target_samples=sample_multiple * len(payload["data"]), random_state=seed)
-        samples.to_csv(samples_fname)
+        samples.to_csv(samples_fname, index=None)
 
 
 if __name__ == "__main__":

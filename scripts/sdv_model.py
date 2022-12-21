@@ -60,7 +60,7 @@ def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbo
 
         # Generate samples
         samples = model.sample(num_rows=sample_multiple * len(payload["data"]))
-        samples.to_csv(samples_fname)
+        samples.to_csv(samples_fname, index=None)
 
 
 if __name__ == "__main__":
