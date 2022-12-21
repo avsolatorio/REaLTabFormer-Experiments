@@ -1,3 +1,6 @@
+import random
+import numpy as np
+import torch
 import joblib
 from pathlib import Path
 from sdv.tabular import GaussianCopula, CopulaGAN, CTGAN, TVAE
@@ -46,21 +49,25 @@ def get_sdv_model(model_type):
 
 
 def train_sample(model_type, data_id, sample_multiple: int = 10):
-
-    model_type = "ctgan"
     _, DATA_DIR, save_dir, samples_save_dir = get_dirs(model_type, data_id)
 
     model = get_sdv_model(model_type)
 
     for path in DATA_DIR.glob("split_*"):
         split = path.name
-        seed = split.split("_")[-1]
+        seed = int(split.split("_")[-1])
         data_fname = path / f"{data_id}_seed-{seed}.pkl"
 
         name = f"{model_type}_model-{data_id}_seed-{seed}"
         print(name)
 
         payload = joblib.load(data_fname)
+
+        # Set random seed
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+
         model.fit(payload["train"])
 
         # Save the trained model
@@ -68,4 +75,11 @@ def train_sample(model_type, data_id, sample_multiple: int = 10):
 
         # Generate samples
         samples = model.sample(num_rows=sample_multiple * len(payload["data"]))
-        samples.to_csv(Path(samples_save_dir) / f"{name}.pkl")
+        samples.to_csv(Path(samples_save_dir) / f"{name}.csv")
+
+
+if __name__ == "__main__":
+    for model_type in model_types:
+        for data_path in (BASE_DIR / "input").glob("*"):
+            data_id = data_path.name
+            train_sample(model_type, data_id)
