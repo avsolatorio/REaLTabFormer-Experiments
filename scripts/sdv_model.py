@@ -4,37 +4,35 @@ import torch
 import joblib
 from pathlib import Path
 from sdv.tabular import GaussianCopula, CopulaGAN, CTGAN, TVAE
-from script_utils import BASE_DIR, model_types, get_dirs, get_fnames
+from script_utils import BASE_DIR, MODEL_TYPES, get_batch_size, get_epochs, get_dirs, get_fnames
 
 
-RANDOM_SEED = 1029
-BASELINE_EPOCHS = 200
-SDV_BATCH_SIZE = 510
+def get_sdv_model(data_id: str, model_type: str):
+    batch_size = get_batch_size(data_id, model_type)
+    epochs = get_epochs(data_id, model_type)
 
-
-def get_sdv_model(model_type):
     if model_type == "ctgan":
-        model = CTGAN(epochs=BASELINE_EPOCHS, verbose=True, batch_size=SDV_BATCH_SIZE)
+        model = CTGAN(epochs=epochs, verbose=True, batch_size=batch_size)
     elif model_type == "tvae":
-        model = TVAE(epochs=BASELINE_EPOCHS, batch_size=SDV_BATCH_SIZE)
+        model = TVAE(epochs=epochs, batch_size=batch_size)
     elif model_type == "copulagan":
-        model = CopulaGAN(epochs=BASELINE_EPOCHS, verbose=True, batch_size=SDV_BATCH_SIZE)
+        model = CopulaGAN(epochs=epochs, verbose=True, batch_size=batch_size)
     elif model_type == "gaussiancopula":
         model = GaussianCopula()
 
     return model
 
 
-def train_sample(model_type, data_id, sample_multiple: int = 10, verbose: bool = True):
-    _, DATA_DIR, save_dir, samples_save_dir = get_dirs(model_type, data_id)
+def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbose: bool = True):
+    _, DATA_DIR, save_dir, samples_save_dir = get_dirs(data_id, model_type)
 
-    model = get_sdv_model(model_type)
+    model = get_sdv_model(data_id, model_type)
 
     for path in DATA_DIR.glob("split_*"):
         split = path.name
         seed = int(split.split("_")[-1])
 
-        data_fname, model_fname, samples_fname = get_fnames(model_type, data_id, seed, verbose=verbose)
+        data_fname, model_fname, samples_fname = get_fnames(data_id, model_type, seed, verbose=verbose)
         data_fname = path / data_fname
         model_fname = Path(save_dir) / model_fname
         samples_fname = Path(samples_save_dir) / samples_fname
@@ -66,7 +64,7 @@ def train_sample(model_type, data_id, sample_multiple: int = 10, verbose: bool =
 
 
 if __name__ == "__main__":
-    for model_type in model_types:
+    for model_type in MODEL_TYPES:
         for data_path in (BASE_DIR / "input").glob("*"):
             data_id = data_path.name
-            train_sample(model_type, data_id)
+            train_sample(data_id, model_type)
