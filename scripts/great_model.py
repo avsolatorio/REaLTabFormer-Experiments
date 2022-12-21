@@ -106,6 +106,9 @@ def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbo
         torch.manual_seed(seed)
 
         if not model_fname.exists():
+            # Set checkpoint directory
+            model.experiment_dir = model_fname.as_posix() + "_checkpoints"
+
             model.fit(payload["train"])
             # Save the trained model
             model.save(model_fname.as_posix())
