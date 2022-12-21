@@ -23,7 +23,7 @@ def get_data_target_batch_size(data_id: str) -> int:
     return target_batch_size
 
 
-def get_batch_size(data_id: str, model_type: str):
+def get_batch_size(data_id: str, model_type: str) -> int:
     # # Batch sizes are set to be approximately
     # # similar across models.
     # SDV_BATCH_SIZE = 510
@@ -43,7 +43,7 @@ def get_batch_size(data_id: str, model_type: str):
     return batch_size
 
 
-def get_epochs(data_id: str, model_type: str):
+def get_epochs(data_id: str, model_type: str) -> int:
     assert model_type in MODEL_TYPES
     # Default number of epochs
     epochs = 200
@@ -94,9 +94,13 @@ def get_dirs(data_id: str, model_type: str, return_checkpoint: bool = False):
     else:
         return EXP_DIR, DATA_DIR, save_dir, samples_save_dir
 
-def get_fnames(data_id: str, model_type: str, seed: int, verbose: bool = True):
-    data_fname = f"{data_id}_seed-{seed}.pkl"
-    name = f"{model_type}_model-{data_id}_seed-{seed}"
+def get_fnames(data_id: str, model_type: str, seed: int, epochs: int = None, verbose: bool = True):
+    base_name = f"{data_id}_seed-{seed}"
+    if epochs is not None:
+        base_name = f"{base_name}_epochs-{epochs}"
+
+    data_fname = f"{base_name}.pkl"
+    name = f"{model_type}_model-{base_name}"
 
     if verbose: print(name)
 
