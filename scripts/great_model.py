@@ -87,6 +87,10 @@ def train_sample(model_type, data_id, sample_multiple: int = 10, verbose: bool =
         model_fname = Path(save_dir) / model_fname
         samples_fname = Path(samples_save_dir) / samples_fname
 
+        # The GReaT model requires a directory for saving the model,
+        # so we remove the .pkl extension.
+        model_fname = model_fname.with_suffix("")
+
         if not data_fname.exists():
             print(f"Data ({data_fname}) doesn't exist... Skipping...")
             continue
@@ -104,12 +108,11 @@ def train_sample(model_type, data_id, sample_multiple: int = 10, verbose: bool =
         if not model_fname.exists():
             model.fit(payload["train"])
             # Save the trained model
-            model.save(model_fname)
+            model.save(model_fname.as_posix())
         else:
-            model = model.load(model_fname)
+            model = model.load_from_dir(model_fname.as_posix())
 
         # Generate samples
-
         samples = sample_great(model, target_samples=sample_multiple * len(payload["data"]), random_state=seed)
         samples.to_csv(samples_fname)
 
