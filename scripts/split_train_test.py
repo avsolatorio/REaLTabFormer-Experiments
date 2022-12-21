@@ -1,3 +1,4 @@
+import warnings
 from typing import Dict, Optional
 import pandas as pd
 from sklearn.datasets import fetch_california_housing
@@ -144,6 +145,9 @@ def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac:
         payload = load_adult_income(data_id, data_path, random_state, frac)
     elif data_id == "travel-customers":
         payload = load_travel_customers(data_id, data_path, random_state, frac)
+    else:
+        warnings.warn(f"The data_id ({data_id}) has no data loader implementation yet. Skipping...")
+        return
 
     assert not any(payload["data"].index.duplicated()), "The data has non-unique index values. Please reindex the data."
 

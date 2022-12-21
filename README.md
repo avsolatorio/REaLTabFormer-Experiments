@@ -40,6 +40,8 @@ The following are the sources of the datasets used in the experiments:
 - **HELOC Dataset**: https://www.kaggle.com/datasets/averkiyoliabev/home-equity-line-of-creditheloc
 - **Travel Customers Dataset**: https://www.kaggle.com/datasets/tejashvi14/tour-travels-customer-churn-prediction
 - **California Housing Dataset**: https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset
+- **Beijing PM2.5 Dataset**: https://archive.ics.uci.edu/ml/datasets/Beijing+PM2.5+Data
+- **Online News Popularity Dataset**: https://archive.ics.uci.edu/ml/datasets/online+news+popularity
 
 
 # Generating dataset splits
