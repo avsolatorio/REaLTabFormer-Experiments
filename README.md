@@ -37,7 +37,7 @@ First we identify the datasets that we test in the experiments. For each dataset
 
 The following are the sources of the datasets used in the experiments:
 
-- **Adult Income Dataset**:
-- **HELOC Dataset**:
-- **Travel Customers Dataset**:
-- **California Housing Dataset**:
+- **Adult Income Dataset**: https://archive.ics.uci.edu/ml/datasets/Adult/
+- **HELOC Dataset**: https://www.kaggle.com/datasets/averkiyoliabev/home-equity-line-of-creditheloc
+- **Travel Customers Dataset**: https://www.kaggle.com/datasets/tejashvi14/tour-travels-customer-churn-prediction
+- **California Housing Dataset**: https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset
