@@ -6,7 +6,7 @@ import joblib
 from pathlib import Path
 from be_great import GReaT
 
-from script_utils import BASE_DIR, GREAT_MODEL_TYPES, get_batch_size, get_epochs, get_dirs, get_fnames
+from script_utils import BASE_DIR, GREAT_MODEL_TYPES, GRADIENT_ACCUMULATION_STEPS, get_batch_size, get_epochs, get_dirs, get_fnames
 
 
 def get_great_model(data_id, model_type):
@@ -14,10 +14,10 @@ def get_great_model(data_id, model_type):
     epochs = get_epochs(data_id, model_type)
 
     if model_type == "distillgreat":
-        model = GReaT(llm='distilgpt2', batch_size=batch_size, epochs=epochs)
+        model = GReaT(llm='distilgpt2', batch_size=batch_size, epochs=epochs, gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS)
 
     elif model_type == "great":
-        model = GReaT(llm='gpt2', batch_size=batch_size, epochs=epochs)
+        model = GReaT(llm='gpt2', batch_size=batch_size, epochs=epochs, gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS)
     else:
         raise ValueError(f"Unknown model_type ({model_type}) for GReaT...")
 

@@ -10,6 +10,8 @@ MODEL_TYPES = SDV_MODEL_TYPES + GREAT_MODEL_TYPES + REALTABFORMER_MODEL_TYPES
 
 BASE_DIR = Path(__file__).parent.parent / "data"
 assert BASE_DIR.exists(), f"Make sure that the DATA_DIR ({BASE_DIR}) is correct..."
+GRADIENT_ACCUMULATION_STEPS = 4
+MIN_BATCH_SIZE = 4
 
 
 def get_data_target_batch_size(data_id: str) -> int:
@@ -32,11 +34,11 @@ def get_batch_size(data_id: str, model_type: str):
 
     if model_type in ["ctgan", "tvae", "copulagan", "gaussiancopula"]:
         # The batch_size for SDV models should be multiple of 10.
-        batch_size = (target_batch_size // 10) * 10
+        batch_size = min(10, (target_batch_size // 10) * 10)
 
     if model_type in ["distillgreat", "great", "smallrealtabformer", "realtabformer", "bigrealtabformer"]:
         cuda_count = torch.cuda.device_count()
-        batch_size = target_batch_size // cuda_count
+        batch_size = max(MIN_BATCH_SIZE, target_batch_size // cuda_count // GRADIENT_ACCUMULATION_STEPS)
 
     return batch_size
 
