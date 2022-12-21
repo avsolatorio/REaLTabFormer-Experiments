@@ -18,19 +18,18 @@ First we identify the datasets that we test in the experiments. For each dataset
     |- models
         |- model_id
             |- data_id
-                |- split-<seed_1>
-                |- split-<seed_2>
-                |- split-<seed_3>
-                |- split-<seed_...>
-                |- split-<seed_N>
-    |- samples
-        |- model_id
-            |- data_id
-                |- split-<seed_1>
-                |- split-<seed_2>
-                |- split-<seed_3>
-                |- split-<seed_...>
-                |- split-<seed_N>
+                |- trained_model
+                    |- split-<seed_1>
+                    |- split-<seed_2>
+                    |- split-<seed_3>
+                    |- split-<seed_...>
+                    |- split-<seed_N>
+                |- samples
+                    |- split-<seed_1>
+                    |- split-<seed_2>
+                    |- split-<seed_3>
+                    |- split-<seed_...>
+                    |- split-<seed_N>
 ```
 
 # Data sources
