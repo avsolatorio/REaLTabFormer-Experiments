@@ -74,7 +74,7 @@ def sample_great(model, target_samples: int, sampling_batch: int = 128, split_sa
 
 
 def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbose: bool = True):
-    _, DATA_DIR, save_dir, samples_save_dir = get_dirs(data_id, model_type)
+    _, DATA_DIR, save_dir, samples_save_dir, checkpoints_dir = get_dirs(data_id, model_type, return_checkpoint=True)
 
     model = get_great_model(data_id, model_type)
 
@@ -90,6 +90,7 @@ def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbo
         # The GReaT model requires a directory for saving the model,
         # so we remove the .pkl extension.
         model_fname = model_fname.with_suffix("")
+        experiment_dir = checkpoints_dir / model_fname.name
 
         if not data_fname.exists():
             print(f"Data ({data_fname}) doesn't exist... Skipping...")
@@ -107,7 +108,7 @@ def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbo
 
         if not model_fname.exists():
             # Set checkpoint directory
-            model.experiment_dir = model_fname.as_posix() + "_checkpoints"
+            model.experiment_dir = experiment_dir.as_posix()
 
             model.fit(payload["train"])
             # Save the trained model

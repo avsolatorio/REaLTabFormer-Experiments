@@ -70,7 +70,7 @@ def get_epochs(data_id: str, model_type: str):
     return epochs
 
 
-def get_dirs(data_id: str, model_type: str):
+def get_dirs(data_id: str, model_type: str, return_checkpoint: bool = False):
     assert model_type in MODEL_TYPES
 
     print(data_id, model_type)
@@ -87,8 +87,12 @@ def get_dirs(data_id: str, model_type: str):
     save_dir = save_dir.as_posix()
     samples_save_dir = samples_save_dir.as_posix()
 
-    return EXP_DIR, DATA_DIR, save_dir, samples_save_dir
-
+    if return_checkpoint:
+        checkpoints_dir = (EXP_DIR / "checkpoints")
+        checkpoints_dir.mkdir(parents=True, exist_ok=True)
+        return EXP_DIR, DATA_DIR, save_dir, samples_save_dir, checkpoints_dir
+    else:
+        return EXP_DIR, DATA_DIR, save_dir, samples_save_dir
 
 def get_fnames(data_id: str, model_type: str, seed: int, verbose: bool = True):
     data_fname = f"{data_id}_seed-{seed}.pkl"
