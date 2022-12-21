@@ -73,8 +73,8 @@ def sample_great(model, target_samples: int, sampling_batch: int = 128, split_sa
     return synthetic_data
 
 
-def train_sample(model_type, data_id, sample_multiple: int = 10, verbose: bool = True):
-    _, DATA_DIR, save_dir, samples_save_dir = get_dirs(model_type, data_id)
+def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbose: bool = True):
+    _, DATA_DIR, save_dir, samples_save_dir = get_dirs(data_id, model_type)
 
     model = get_great_model(data_id, model_type)
 
@@ -82,7 +82,7 @@ def train_sample(model_type, data_id, sample_multiple: int = 10, verbose: bool =
         split = path.name
         seed = int(split.split("_")[-1])
 
-        data_fname, model_fname, samples_fname = get_fnames(model_type, data_id, seed, verbose=verbose)
+        data_fname, model_fname, samples_fname = get_fnames(data_id, model_type, seed, verbose=verbose)
         data_fname = path / data_fname
         model_fname = Path(save_dir) / model_fname
         samples_fname = Path(samples_save_dir) / samples_fname
@@ -121,4 +121,4 @@ if __name__ == "__main__":
     for model_type in GREAT_MODEL_TYPES:
         for data_path in (BASE_DIR / "input").glob("*"):
             data_id = data_path.name
-            train_sample(model_type, data_id)
+            train_sample(data_id, model_type)
