@@ -61,6 +61,12 @@ def train_sample(model_type, data_id, sample_multiple: int = 10):
         name = f"{model_type}_model-{data_id}_seed-{seed}"
         print(name)
 
+        model_fname = Path(save_dir) / f"{name}.pkl"
+        samples_fname = Path(samples_save_dir) / f"{name}.csv"
+
+        if samples_fname.exists():
+            continue
+
         payload = joblib.load(data_fname)
 
         # Set random seed
@@ -68,14 +74,16 @@ def train_sample(model_type, data_id, sample_multiple: int = 10):
         np.random.seed(seed)
         torch.manual_seed(seed)
 
-        model.fit(payload["train"])
-
-        # Save the trained model
-        model.save(Path(save_dir) / f"{name}.pkl")
+        if not model_fname.exists():
+            model.fit(payload["train"])
+            # Save the trained model
+            model.save(model_fname)
+        else:
+            model = model.load(model_fname)
 
         # Generate samples
         samples = model.sample(num_rows=sample_multiple * len(payload["data"]))
-        samples.to_csv(Path(samples_save_dir) / f"{name}.csv")
+        samples.to_csv(samples_fname)
 
 
 if __name__ == "__main__":
