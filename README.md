@@ -32,3 +32,12 @@ First we identify the datasets that we test in the experiments. For each dataset
                 |- split-<seed_...>
                 |- split-<seed_N>
 ```
+
+# Data sources
+
+The following are the sources of the datasets used in the experiments:
+
+- **Adult Income Dataset**:
+- **HELOC Dataset**:
+- **Travel Customers Dataset**:
+- **California Housing Dataset**:
