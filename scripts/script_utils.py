@@ -96,11 +96,12 @@ def get_dirs(data_id: str, model_type: str, return_checkpoint: bool = False):
 
 def get_fnames(data_id: str, model_type: str, seed: int, epochs: int = None, verbose: bool = True):
     base_name = f"{data_id}_seed-{seed}"
-    if epochs is not None:
-        base_name = f"{base_name}_epochs-{epochs}"
-
     data_fname = f"{base_name}.pkl"
-    name = f"{model_type}_model-{base_name}"
+
+    if epochs is not None:
+        model_base_name = f"{base_name}_epochs-{epochs}"
+
+    name = f"{model_type}_model-{model_base_name}"
 
     if verbose: print(name)
 
