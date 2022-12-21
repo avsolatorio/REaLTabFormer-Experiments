@@ -1,9 +1,12 @@
 from pathlib import Path
 import torch
 
-
-MODEL_TYPES = ["ctgan", "tvae", "copulagan", "gaussiancopula", "distillgreat", "great", "smallrealtabformer", "realtabformer", "bigrealtabformer"]
 RANDOM_SEED = 1029
+
+SDV_MODEL_TYPES = ["ctgan", "tvae", "copulagan", "gaussiancopula"]
+GREAT_MODEL_TYPES = ["distillgreat", "great"]
+REALTABFORMER_MODEL_TYPES = ["smallrealtabformer", "realtabformer", "bigrealtabformer"]
+MODEL_TYPES = SDV_MODEL_TYPES + GREAT_MODEL_TYPES + REALTABFORMER_MODEL_TYPES
 
 BASE_DIR = Path(__file__).parent.parent / "data"
 assert BASE_DIR.exists(), f"Make sure that the DATA_DIR ({BASE_DIR}) is correct..."

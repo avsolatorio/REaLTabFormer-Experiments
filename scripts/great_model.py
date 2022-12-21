@@ -6,7 +6,7 @@ import joblib
 from pathlib import Path
 from be_great import GReaT
 
-from script_utils import BASE_DIR, MODEL_TYPES, get_batch_size, get_epochs, get_dirs, get_fnames
+from script_utils import BASE_DIR, GREAT_MODEL_TYPES, get_batch_size, get_epochs, get_dirs, get_fnames
 
 
 def get_great_model(data_id, model_type):
@@ -115,7 +115,7 @@ def train_sample(model_type, data_id, sample_multiple: int = 10, verbose: bool =
 
 
 if __name__ == "__main__":
-    for model_type in MODEL_TYPES:
+    for model_type in GREAT_MODEL_TYPES:
         for data_path in (BASE_DIR / "input").glob("*"):
             data_id = data_path.name
             train_sample(model_type, data_id)
