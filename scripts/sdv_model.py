@@ -35,6 +35,19 @@ def get_dirs(model_type, data_id):
     return EXP_DIR, DATA_DIR, save_dir, samples_save_dir
 
 
+def get_fnames(model_type: str, data_id: str, seed: int, verbose: bool = True):
+    data_fname = f"{data_id}_seed-{seed}.pkl"
+    name = f"{model_type}_model-{data_id}_seed-{seed}"
+
+    if verbose: print(name)
+
+
+    model_fname = f"{name}.pkl"
+    samples_fname = f"{name}.csv"
+
+    return data_fname, model_fname, samples_fname
+
+
 def get_sdv_model(model_type):
     if model_type == "ctgan":
         model = CTGAN(epochs=BASELINE_EPOCHS, verbose=True, batch_size=SDV_BATCH_SIZE)
@@ -48,7 +61,7 @@ def get_sdv_model(model_type):
     return model
 
 
-def train_sample(model_type, data_id, sample_multiple: int = 10):
+def train_sample(model_type, data_id, sample_multiple: int = 10, verbose: bool = True):
     _, DATA_DIR, save_dir, samples_save_dir = get_dirs(model_type, data_id)
 
     model = get_sdv_model(model_type)
@@ -56,13 +69,11 @@ def train_sample(model_type, data_id, sample_multiple: int = 10):
     for path in DATA_DIR.glob("split_*"):
         split = path.name
         seed = int(split.split("_")[-1])
-        data_fname = path / f"{data_id}_seed-{seed}.pkl"
 
-        name = f"{model_type}_model-{data_id}_seed-{seed}"
-        print(name)
-
-        model_fname = Path(save_dir) / f"{name}.pkl"
-        samples_fname = Path(samples_save_dir) / f"{name}.csv"
+        data_fname, model_fname, samples_fname = get_fnames(model_type, data_id, seed, verbose=verbose)
+        data_fname = path / data_fname
+        model_fname = Path(save_dir) / model_fname
+        samples_fname = Path(samples_save_dir) / samples_fname
 
         if samples_fname.exists():
             continue
