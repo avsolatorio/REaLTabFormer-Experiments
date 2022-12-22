@@ -1,7 +1,7 @@
 from pathlib import Path
 import torch
 
-DATA_IDS = ["california-housing", "heloc", "adult-income", "travel-customers"]
+DATA_IDS = ["california-housing", "travel-customers", "adult-income", "heloc"]
 SPLIT_SEEDS = [610, 1029, 1004, 2019, 2009]
 RANDOM_SEED = 1029
 
