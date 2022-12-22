@@ -64,6 +64,7 @@ def train_sample(data_id: str, model_type: str, seed: int, sample_multiple: int 
 
 
 if __name__ == "__main__":
+    # cd sdv-env && OPENBLAS_NUM_THREADS=1 pipenv run python ../scripts/sdv_model.py
     for model_type in SDV_MODEL_TYPES:
         for seed in SPLIT_SEEDS:
             for data_id in DATA_IDS:
