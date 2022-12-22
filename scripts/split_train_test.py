@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 import joblib
 
 from pathlib import Path
+from script_utils import SPLIT_SEEDS, DATA_IDS
 
 
 def load_california_housing(data_id: str, data_path: Path, random_state: int, frac: float = 0.8) -> dict:
@@ -133,6 +134,7 @@ def load_travel_customers(data_id: str, data_path: Path, random_state: int, frac
 
 
 def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac: float = 0.8, return_payload: bool = False) -> Optional[dict]:
+    assert data_id in DATA_IDS
 
     part_path = data_path / f"split_{random_state}" / f"{data_id}_seed-{random_state}.pkl"
     part_path.parent.mkdir(parents=True, exist_ok=True)
@@ -182,7 +184,11 @@ for p in DATA_DIR.glob("*"):
 
 
 for data_id in data_id_path:
-    for seed in [610, 1029, 1004, 2019, 2009]:
+    if data_id not in DATA_IDS:
+        warnings.warn(f"The data_id {data_id} is not registered. Skipping...")
+        continue
+
+    for seed in SPLIT_SEEDS:
         print(f"Generating data splits for {data_id} using seed {seed}...", flush=True)
         load_split_save_data(
             data_id=data_id,

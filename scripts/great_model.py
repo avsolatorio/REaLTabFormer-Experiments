@@ -6,7 +6,7 @@ import joblib
 from pathlib import Path
 from be_great import GReaT
 
-from script_utils import BASE_DIR, GREAT_MODEL_TYPES, GRADIENT_ACCUMULATION_STEPS, get_batch_size, get_epochs, get_dirs, get_fnames
+from script_utils import BASE_DIR, GREAT_MODEL_TYPES, GRADIENT_ACCUMULATION_STEPS, DATA_IDS, SPLIT_SEEDS, get_batch_size, get_epochs, get_dirs, get_fnames
 
 
 def get_great_model(data_id: str, model_type: str, epochs: int = None):
@@ -76,57 +76,55 @@ def sample_great(model, target_samples: int, sampling_batch: int = 128, sampling
     return synthetic_data
 
 
-def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbose: bool = True):
+def train_sample(data_id: str, model_type: str, seed: int, sample_multiple: int = 10, verbose: bool = True):
     _, DATA_DIR, save_dir, samples_save_dir, checkpoints_dir = get_dirs(data_id, model_type, return_checkpoint=True)
 
     epochs = get_epochs(data_id, model_type)
     model = get_great_model(data_id, model_type, epochs=epochs)
 
-    for path in DATA_DIR.glob("split_*"):
-        split = path.name
-        seed = int(split.split("_")[-1])
+    path = DATA_DIR / f"split_{seed}"
 
-        data_fname, model_fname, samples_fname = get_fnames(data_id, model_type, seed, epochs=epochs, verbose=verbose)
-        data_fname = path / data_fname
-        model_fname = Path(save_dir) / model_fname
-        samples_fname = Path(samples_save_dir) / samples_fname
+    data_fname, model_fname, samples_fname = get_fnames(data_id, model_type, seed, epochs=epochs, verbose=verbose)
+    data_fname = path / data_fname
+    model_fname = Path(save_dir) / model_fname
+    samples_fname = Path(samples_save_dir) / samples_fname
 
-        # The GReaT model requires a directory for saving the model,
-        # so we remove the .pkl extension.
-        model_fname = model_fname.with_suffix("")
-        experiment_dir = checkpoints_dir / model_fname.name
+    # The GReaT model requires a directory for saving the model,
+    # so we remove the .pkl extension.
+    model_fname = model_fname.with_suffix("")
+    experiment_dir = checkpoints_dir / model_fname.name
 
-        if not data_fname.exists():
-            print(f"Data ({data_fname}) doesn't exist... Skipping...")
-            continue
+    if not data_fname.exists():
+        print(f"Data ({data_fname}) doesn't exist... Skipping...")
+        return
 
-        if samples_fname.exists():
-            continue
+    if samples_fname.exists():
+        return
 
-        payload = joblib.load(data_fname)
+    payload = joblib.load(data_fname)
 
-        # Set random seed
-        random.seed(seed)
-        np.random.seed(seed)
-        torch.manual_seed(seed)
+    # Set random seed
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
-        if not model_fname.exists():
-            # Set checkpoint directory
-            model.experiment_dir = experiment_dir.as_posix()
+    if not model_fname.exists():
+        # Set checkpoint directory
+        model.experiment_dir = experiment_dir.as_posix()
 
-            model.fit(payload["train"])
-            # Save the trained model
-            model.save(model_fname.as_posix())
-        else:
-            model = model.load_from_dir(model_fname.as_posix())
+        model.fit(payload["train"])
+        # Save the trained model
+        model.save(model_fname.as_posix())
+    else:
+        model = model.load_from_dir(model_fname.as_posix())
 
-        # Generate samples
-        samples = sample_great(model, target_samples=sample_multiple * len(payload["data"]), random_state=seed)
-        samples.to_csv(samples_fname, index=None)
+    # Generate samples
+    samples = sample_great(model, target_samples=sample_multiple * len(payload["data"]), random_state=seed)
+    samples.to_csv(samples_fname, index=None)
 
 
 if __name__ == "__main__":
     for model_type in GREAT_MODEL_TYPES:
-        for data_path in (BASE_DIR / "input").glob("*"):
-            data_id = data_path.name
-            train_sample(data_id, model_type)
+        for seed in SPLIT_SEEDS:
+            for data_id in DATA_IDS:
+                train_sample(data_id, model_type, seed=seed)
