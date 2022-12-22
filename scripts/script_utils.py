@@ -112,3 +112,33 @@ def get_fnames(data_id: str, model_type: str, seed: int, epochs: int = None, ver
     samples_fname = f"{name}.csv"
 
     return data_fname, model_fname, samples_fname
+
+
+def rename_samples(epochs, parent):
+    import subprocess as sub
+
+    samples_fnames = list((parent / "samples").glob("*.csv"))
+    models_fnames = list((parent / "trained_model").glob("*.pkl"))
+
+    for f in samples_fnames:
+        src = f.as_posix()
+
+        if src.endswith(f"_epochs-{epochs}.csv"):
+            print(f"Skipping {src}...")
+            continue
+
+        dest = (f.parent / (f.stem + f"_epochs-{epochs}.csv")).as_posix()
+        sub.call(["mv", src, dest])
+
+        print(f"Moved {src} to {dest}...")
+
+    for f in models_fnames:
+        src = f.as_posix()
+        if src.endswith(f"_epochs-{epochs}.pkl"):
+            print(f"Skipping {src}...")
+            continue
+
+        dest = (f.parent / (f.stem + f"_epochs-{epochs}.pkl")).as_posix()
+        sub.call(["mv", src, dest])
+
+        print(f"Moved {src} to {dest}...")
