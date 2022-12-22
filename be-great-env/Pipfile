@@ -4,8 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-be-great = "*"
 numpy = "<1.24"
+be-great = {editable = true, ref = "main", git = "https://github.com/kathrinse/be_great"}
 
 [dev-packages]
 
