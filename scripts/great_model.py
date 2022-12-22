@@ -26,9 +26,10 @@ def get_great_model(data_id: str, model_type: str, epochs: int = None):
     return model
 
 
-def sample_great(model, target_samples: int, sampling_batch: int = 128, split_sampling: int = 20, device: str = "cuda", random_state: int = 1029):
+def sample_great(model, target_samples: int, sampling_batch: int = 128, sampling_rate: int = 10, device: str = "cuda", random_state: int = 1029):
     synthetic_data = pd.DataFrame()
-    split_samples = (target_samples // split_sampling) + 1
+    # split_samples = (target_samples // split_sampling) + 1
+    split_samples = sampling_batch * sampling_rate
     continuous_error_limit = 20
 
     while (synthetic_data.shape[0] < target_samples) and continuous_error_limit:
