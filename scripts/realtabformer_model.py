@@ -16,7 +16,7 @@ def get_realtabformer_model(data_id: str, model_type: str, epochs: int = None, s
 
     batch_size, gradient_accumulation_steps = get_batch_size(data_id, model_type, return_accumulation=True)
 
-    n_critic = 10
+    n_critic = 5
     training_args_kwargs = dict(
         logging_steps=100,
         save_steps=100,
@@ -111,7 +111,7 @@ def train_sample(data_id: str, model_type: str, seed: int, sample_multiple: int 
         model.fit(
             payload["train"],
             device="cuda" if torch.cuda.is_available() else "cpu",
-            qt_max=0.05, qt_interval=100, qt_interval_unique=100, n_critic=n_critic,
+            qt_max=0.1, qt_interval=100, qt_interval_unique=100, n_critic=n_critic,
             num_bootstrap=500,
             sensitivity_max_col_nums=5,
             use_ks=False,
