@@ -83,6 +83,41 @@ The following are the sources of the datasets used in the experiments:
     - native-country    object
     - income            object</pre>
 
+## HELOC Dataset
+
+- Number of observations: 9,871
+- Numeric columns: 23
+- Categorical columns: 1
+- Target variable: "RiskPerformance"
+- Positive target value: "Good"
+- Variable types:
+  <pre>
+    - RiskPerformance                       object
+    - ExternalRiskEstimate                   int64
+    - MSinceOldestTradeOpen                  int64
+    - MSinceMostRecentTradeOpen              int64
+    - AverageMInFile                         int64
+    - NumSatisfactoryTrades                  int64
+    - NumTrades60Ever2DerogPubRec            int64
+    - NumTrades90Ever2DerogPubRec            int64
+    - PercentTradesNeverDelq                 int64
+    - MSinceMostRecentDelq                   int64
+    - MaxDelq2PublicRecLast12M               int64
+    - MaxDelqEver                            int64
+    - NumTotalTrades                         int64
+    - NumTradesOpeninLast12M                 int64
+    - PercentInstallTrades                   int64
+    - MSinceMostRecentInqexcl7days           int64
+    - NumInqLast6M                           int64
+    - NumInqLast6Mexcl7days                  int64
+    - NetFractionRevolvingBurden             int64
+    - NetFractionInstallBurden               int64
+    - NumRevolvingTradesWBalance             int64
+    - NumInstallTradesWBalance               int64
+    - NumBank2NatlTradesWHighUtilization     int64
+    - PercentTradesWBalance                  int64</pre>
+- Notes:
+  - Removed 588 out of the original 10,459 observations. These observations have all missing values across the variables.
 
 # Generating dataset splits
 
