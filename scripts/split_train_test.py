@@ -44,6 +44,11 @@ def load_california_housing(data_id: str, data_path: Path, random_state: int, fr
 def load_heloc(data_id: str, data_path: Path, random_state: int, frac: float = 0.8) -> dict:
     raw_dir = data_path / "raw"
     _data = pd.read_csv(raw_dir / "heloc_dataset_v1.csv")
+    assert _data.isnull().sum().sum() == 0, "We expect that the HELOC data has no NA values."
+
+    # Remove observations that are likely to have all variables missing (imputed with -9)
+    _data = _data.replace(-9, None).dropna(thresh=23).fillna(-9)
+    assert _data.isnull().sum().sum() == 0, "Again, we expect that the HELOC data has no NA values."
 
     target_col = "RiskPerformance"
     target_pos_val = "Good"
