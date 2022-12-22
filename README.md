@@ -65,6 +65,8 @@ The following are the sources of the datasets used in the experiments:
 - Categorical columns: 9
 - Target variable: "income"
 - Positive target value: ">50K"
+- Target classes: ["<=50K", ">50K"]
+- Missing values: assumed to be encoded by "?"
 - Variable types:
   <pre>
     - age                int64
@@ -90,6 +92,8 @@ The following are the sources of the datasets used in the experiments:
 - Categorical columns: 1
 - Target variable: "RiskPerformance"
 - Positive target value: "Good"
+- Target classes: ["Bad", "Good"]
+- Missing values: assumed to be encoded by -9
 - Variable types:
   <pre>
     - RiskPerformance                       object
@@ -118,6 +122,25 @@ The following are the sources of the datasets used in the experiments:
     - PercentTradesWBalance                  int64</pre>
 - Notes:
   - Removed 588 out of the original 10,459 observations. These observations have all missing values across the variables.
+
+## Travel Customers Dataset
+
+- Number of observations: 954
+- Numeric columns: 3
+- Categorical columns: 4
+- Target variable: "Target"
+- Positive target value: 1
+- Target classes: [0, 1]
+- Missing values: None
+- Variable types:
+  <pre>
+    - Age                            int64
+    - FrequentFlyer                 object
+    - AnnualIncomeClass             object
+    - ServicesOpted                  int64
+    - AccountSyncedToSocialMedia    object
+    - BookedHotelOrNot              object
+    - Target                         int64</pre>
 
 # Generating dataset splits
 
