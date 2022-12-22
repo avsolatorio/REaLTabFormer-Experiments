@@ -1,5 +1,4 @@
 from pathlib import Path
-import torch
 
 DATA_IDS = ["california-housing", "travel-customers", "adult-income", "heloc"]
 SPLIT_SEEDS = [610, 1029, 1004, 2019, 2009]
@@ -26,6 +25,8 @@ def get_data_target_batch_size(data_id: str) -> int:
 
 
 def get_batch_size(data_id: str, model_type: str, return_accumulation: bool = False) -> int:
+    import torch
+
     # # Batch sizes are set to be approximately
     # # similar across models.
     # SDV_BATCH_SIZE = 510
