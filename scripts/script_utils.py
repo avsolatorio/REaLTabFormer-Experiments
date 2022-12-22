@@ -66,6 +66,9 @@ def get_epochs(data_id: str, model_type: str) -> int:
             epochs = 400
         elif data_id == "heloc":
             epochs = 255
+    elif model_type == "gaussiancopula":
+        # No epochs parameter
+        epochs = 0
 
     return epochs
 

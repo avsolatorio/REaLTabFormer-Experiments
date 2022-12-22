@@ -7,9 +7,11 @@ from sdv.tabular import GaussianCopula, CopulaGAN, CTGAN, TVAE
 from script_utils import BASE_DIR, SDV_MODEL_TYPES, get_batch_size, get_epochs, get_dirs, get_fnames
 
 
-def get_sdv_model(data_id: str, model_type: str):
+def get_sdv_model(data_id: str, model_type: str, epochs: int = None):
     batch_size = get_batch_size(data_id, model_type)
-    epochs = get_epochs(data_id, model_type)
+
+    if epochs is None:
+        epochs = get_epochs(data_id, model_type)
 
     if model_type == "ctgan":
         model = CTGAN(epochs=epochs, verbose=True, batch_size=batch_size)
@@ -26,13 +28,14 @@ def get_sdv_model(data_id: str, model_type: str):
 def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbose: bool = True):
     _, DATA_DIR, save_dir, samples_save_dir = get_dirs(data_id, model_type)
 
-    model = get_sdv_model(data_id, model_type)
+    epochs = get_epochs(data_id, model_type)
+    model = get_sdv_model(data_id, model_type, epochs=epochs)
 
     for path in DATA_DIR.glob("split_*"):
         split = path.name
         seed = int(split.split("_")[-1])
 
-        data_fname, model_fname, samples_fname = get_fnames(data_id, model_type, seed, verbose=verbose)
+        data_fname, model_fname, samples_fname = get_fnames(data_id, model_type, seed, epochs=epochs, verbose=verbose)
         data_fname = path / data_fname
         model_fname = Path(save_dir) / model_fname
         samples_fname = Path(samples_save_dir) / samples_fname
