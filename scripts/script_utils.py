@@ -25,7 +25,7 @@ def get_data_target_batch_size(data_id: str) -> int:
     return target_batch_size
 
 
-def get_batch_size(data_id: str, model_type: str) -> int:
+def get_batch_size(data_id: str, model_type: str, return_accumulation: bool = False) -> int:
     # # Batch sizes are set to be approximately
     # # similar across models.
     # SDV_BATCH_SIZE = 510
@@ -33,16 +33,44 @@ def get_batch_size(data_id: str, model_type: str) -> int:
     # GREAT_BATCH_SIZE = 512  # Adjust gradient_accumulation_steps and distributed
 
     target_batch_size = get_data_target_batch_size(data_id)
+    gradient_accumulation_steps = GRADIENT_ACCUMULATION_STEPS
 
     if model_type in ["ctgan", "tvae", "copulagan", "gaussiancopula"]:
         # The batch_size for SDV models should be multiple of 10.
         batch_size = min(10, (target_batch_size // 10) * 10)
 
-    if model_type in ["distillgreat", "great", "smallrealtabformer", "realtabformer", "bigrealtabformer"]:
+    elif model_type == "distillgreat":
         cuda_count = torch.cuda.device_count()
         batch_size = max(MIN_BATCH_SIZE, target_batch_size // cuda_count // GRADIENT_ACCUMULATION_STEPS)
 
-    return batch_size
+        if data_id == "california-housing":
+            batch_size = 64  # batch size for a single cuda device
+            gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
+
+        elif data_id == "heloc":
+            batch_size = 32  # batch size for a single cuda device
+            gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
+
+    elif model_type == "great":
+        cuda_count = torch.cuda.device_count()
+        batch_size = max(MIN_BATCH_SIZE, target_batch_size // cuda_count // GRADIENT_ACCUMULATION_STEPS)
+
+        if data_id == "california-housing":
+            batch_size = 32  # batch size for a single cuda device
+            gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
+
+        elif data_id == "heloc":
+            batch_size = 16  # batch size for a single cuda device
+            gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
+
+    elif model_type in ["smallrealtabformer", "realtabformer", "bigrealtabformer"]:
+        cuda_count = torch.cuda.device_count()
+        batch_size = max(MIN_BATCH_SIZE, target_batch_size // cuda_count // GRADIENT_ACCUMULATION_STEPS)
+
+    if return_accumulation:
+        return batch_size, gradient_accumulation_steps
+    else:
+        return batch_size
 
 
 def get_epochs(data_id: str, model_type: str) -> int:

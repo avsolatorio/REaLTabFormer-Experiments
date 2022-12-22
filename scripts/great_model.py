@@ -10,16 +10,16 @@ from script_utils import BASE_DIR, GREAT_MODEL_TYPES, GRADIENT_ACCUMULATION_STEP
 
 
 def get_great_model(data_id: str, model_type: str, epochs: int = None):
-    batch_size = get_batch_size(data_id, model_type)
+    batch_size, gradient_accumulation_steps = get_batch_size(data_id, model_type, return_accumulation=True)
 
     if epochs is None:
         epochs = get_epochs(data_id, model_type)
 
     if model_type == "distillgreat":
-        model = GReaT(llm='distilgpt2', batch_size=batch_size, epochs=epochs, gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS)
+        model = GReaT(llm='distilgpt2', batch_size=batch_size, epochs=epochs, gradient_accumulation_steps=gradient_accumulation_steps)
 
     elif model_type == "great":
-        model = GReaT(llm='gpt2', batch_size=batch_size, epochs=epochs, gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS)
+        model = GReaT(llm='gpt2', batch_size=batch_size, epochs=epochs, gradient_accumulation_steps=gradient_accumulation_steps)
     else:
         raise ValueError(f"Unknown model_type ({model_type}) for GReaT...")
 
