@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 be-great = "*"
+numpy = "<1.24"
 
 [dev-packages]
 
