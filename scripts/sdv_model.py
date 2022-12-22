@@ -4,7 +4,7 @@ import torch
 import joblib
 from pathlib import Path
 from sdv.tabular import GaussianCopula, CopulaGAN, CTGAN, TVAE
-from script_utils import BASE_DIR, SDV_MODEL_TYPES, get_batch_size, get_epochs, get_dirs, get_fnames
+from script_utils import BASE_DIR, SDV_MODEL_TYPES, SPLIT_SEEDS, DATA_IDS, get_batch_size, get_epochs, get_dirs, get_fnames
 
 
 def get_sdv_model(data_id: str, model_type: str, epochs: int = None):
@@ -25,49 +25,48 @@ def get_sdv_model(data_id: str, model_type: str, epochs: int = None):
     return model
 
 
-def train_sample(data_id: str, model_type: str, sample_multiple: int = 10, verbose: bool = True):
+def train_sample(data_id: str, model_type: str, seed: int, sample_multiple: int = 10, verbose: bool = True):
     _, DATA_DIR, save_dir, samples_save_dir = get_dirs(data_id, model_type)
 
     epochs = get_epochs(data_id, model_type)
     model = get_sdv_model(data_id, model_type, epochs=epochs)
+    path = DATA_DIR / f"split_{seed}"
 
-    for path in DATA_DIR.glob("split_*"):
-        split = path.name
-        seed = int(split.split("_")[-1])
+    data_fname, model_fname, samples_fname = get_fnames(data_id, model_type, seed, epochs=epochs, verbose=verbose)
+    data_fname = path / data_fname
+    model_fname = Path(save_dir) / model_fname
+    samples_fname = Path(samples_save_dir) / samples_fname
 
-        data_fname, model_fname, samples_fname = get_fnames(data_id, model_type, seed, epochs=epochs, verbose=verbose)
-        data_fname = path / data_fname
-        model_fname = Path(save_dir) / model_fname
-        samples_fname = Path(samples_save_dir) / samples_fname
+    if not data_fname.exists():
+        print(f"Data ({data_fname}) doesn't exist... Skipping...")
+        return
 
-        if not data_fname.exists():
-            print(f"Data ({data_fname}) doesn't exist... Skipping...")
-            continue
+    if samples_fname.exists():
+        return
 
-        if samples_fname.exists():
-            continue
+    payload = joblib.load(data_fname)
 
-        payload = joblib.load(data_fname)
+    # Set random seed
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
-        # Set random seed
-        random.seed(seed)
-        np.random.seed(seed)
-        torch.manual_seed(seed)
+    if not model_fname.exists():
+        model.fit(payload["train"])
+        # Save the trained model
+        model.save(model_fname)
+    else:
+        model = model.load(model_fname)
 
-        if not model_fname.exists():
-            model.fit(payload["train"])
-            # Save the trained model
-            model.save(model_fname)
-        else:
-            model = model.load(model_fname)
-
-        # Generate samples
-        samples = model.sample(num_rows=sample_multiple * len(payload["data"]))
-        samples.to_csv(samples_fname, index=None)
+    # Generate samples
+    samples = model.sample(num_rows=sample_multiple * len(payload["data"]))
+    samples.to_csv(samples_fname, index=None)
 
 
 if __name__ == "__main__":
     for model_type in SDV_MODEL_TYPES:
-        for data_path in (BASE_DIR / "input").glob("*"):
-            data_id = data_path.name
-            train_sample(data_id, model_type)
+        for seed in SPLIT_SEEDS:
+            for data_id in DATA_IDS:
+                if data_id == "adult-income" and model_type == "tvae":
+                    continue
+                train_sample(data_id, model_type, seed=seed)
