@@ -19,7 +19,7 @@ def get_great_model(data_id: str, model_type: str, epochs: int = None):
         model = GReaT(llm='distilgpt2', batch_size=batch_size, epochs=epochs, gradient_accumulation_steps=gradient_accumulation_steps)
 
     elif model_type == "great":
-        model = GReaT(llm='gpt2', batch_size=batch_size, epochs=epochs, gradient_accumulation_steps=gradient_accumulation_steps)
+        model = GReaT(llm='gpt2-medium', batch_size=batch_size, epochs=epochs, gradient_accumulation_steps=gradient_accumulation_steps)
     else:
         raise ValueError(f"Unknown model_type ({model_type}) for GReaT...")
 
