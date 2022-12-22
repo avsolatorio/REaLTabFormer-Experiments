@@ -37,7 +37,7 @@ def get_batch_size(data_id: str, model_type: str, return_accumulation: bool = Fa
 
     if model_type in ["ctgan", "tvae", "copulagan", "gaussiancopula"]:
         # The batch_size for SDV models should be multiple of 10.
-        batch_size = min(10, (target_batch_size // 10) * 10)
+        batch_size = max(10, (target_batch_size // 10) * 10)
 
     elif model_type == "distillgreat":
         cuda_count = torch.cuda.device_count()
