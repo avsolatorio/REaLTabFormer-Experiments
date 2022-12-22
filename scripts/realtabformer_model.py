@@ -21,16 +21,16 @@ def get_realtabformer_model(data_id: str, model_type: str, epochs: int = None, s
         logging_steps=100,
         save_steps=100,
         eval_steps=100,
-        save_total_limit=10,
+        save_total_limit=1,
     )
 
     if data_id == "heloc":
         n_critic = 5
         training_args_kwargs.update(
             dict(
-                logging_steps=10,
-                save_steps=10,
-                eval_steps=10,
+                logging_steps=50,
+                save_steps=50,
+                eval_steps=50,
             )
         )
 
