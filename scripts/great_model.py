@@ -1,3 +1,4 @@
+import warnings
 import random
 import numpy as np
 import pandas as pd
@@ -119,8 +120,12 @@ def train_sample(data_id: str, model_type: str, seed: int, sample_multiple: int 
         model = model.load_from_dir(model_fname.as_posix())
 
     # Generate samples
-    samples = sample_great(model, target_samples=sample_multiple * len(payload["data"]), random_state=seed)
-    samples.to_csv(samples_fname, index=None)
+    try:
+        samples = sample_great(model, target_samples=sample_multiple * len(payload["data"]), random_state=seed)
+        samples.to_csv(samples_fname, index=None)
+    except ValueError:
+        warnings.warn("No samples were generated!")
+        return
 
 
 if __name__ == "__main__":
