@@ -64,6 +64,7 @@ def get_realtabformer_model(data_id: str, model_type: str, epochs: int = None, s
         epochs=epochs, batch_size=batch_size,
         train_size=1,
         random_state=seed,
+        early_stopping_patience=0,  # Don't need to have so many checkpoints.
         **training_args_kwargs)
 
     return model, n_critic
