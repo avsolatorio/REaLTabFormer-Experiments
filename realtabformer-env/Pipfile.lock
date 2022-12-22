@@ -557,11 +557,11 @@
         },
         "realtabformer": {
             "hashes": [
-                "sha256:907e63038e2e2897bdb13dd3c07deef3778923d17ff7b2e1ed7631fc3c4b9883",
-                "sha256:a4f153954e270a86c73ad99c96109c9750882f149c4237b2d00ebd5a8bbf658f"
+                "sha256:1b95c7a91fc1abb1078cda0a0ab9178ec8fb533329798b5483f48f811b7d5fcd",
+                "sha256:a9120ba6f65f7890ee19111a99cdbc1cf7377fa39be3bf35f10c8b5d9c88d65e"
             ],
             "index": "pypi",
-            "version": "==0.0.2.2.0"
+            "version": "==0.0.2.2.1"
         },
         "regex": {
             "hashes": [
