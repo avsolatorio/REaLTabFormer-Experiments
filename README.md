@@ -30,6 +30,19 @@ First we identify the datasets that we test in the experiments. For each dataset
                     |- split-<seed_3>
                     |- split-<seed_...>
                     |- split-<seed_N>
+                |- checkpoints
+                    |- split-<seed_1>
+                    |- split-<seed_2>
+                    |- split-<seed_3>
+                    |- split-<seed_...>
+                    |- split-<seed_N>
+```
+
+# Special installation notes
+
+We use the github install since the pip package is not yet updated with the fix that handles the random `IndexError` in `great_utils.py:_convert_text_to_tabular_data:td[values[0]] = [values[1]]`.
+```
+pipenv install -e git+https://github.com/kathrinse/be_great@main#egg=be_great
 ```
 
 # Data sources
@@ -42,6 +55,33 @@ The following are the sources of the datasets used in the experiments:
 - **California Housing Dataset**: https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset
 - **Beijing PM2.5 Dataset**: https://archive.ics.uci.edu/ml/datasets/Beijing+PM2.5+Data
 - **Online News Popularity Dataset**: https://archive.ics.uci.edu/ml/datasets/online+news+popularity
+
+# Data summary
+
+## Adult Income Dataset
+
+- Number of observations: 32,561
+- Numeric columns: 6
+- Categorical columns: 9
+- Target variable: "income"
+- Positive target value: ">50K"
+- Variable types:
+  <pre>
+    - age                int64
+    - workclass         object
+    - fnlwgt             int64
+    - education         object
+    - education-num      int64
+    - marital-status    object
+    - occupation        object
+    - relationship      object
+    - race              object
+    - sex               object
+    - capital-gain       int64
+    - capital-loss       int64
+    - hours-per-week     int64
+    - native-country    object
+    - income            object</pre>
 
 
 # Generating dataset splits
