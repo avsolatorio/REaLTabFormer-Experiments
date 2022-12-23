@@ -27,13 +27,14 @@ def get_great_model(data_id: str, model_type: str, epochs: int = None):
     return model
 
 
-def sample_great(model, target_samples: int, sampling_batch: int = 128, sampling_rate: int = 10, device: str = "cuda", random_state: int = 1029):
+def sample_great(model, target_samples: int, sampling_batch: int = 256, sampling_rate: int = 10, device: str = "cuda", random_state: int = 1029):
     synthetic_data = pd.DataFrame()
     # split_samples = (target_samples // split_sampling) + 1
     split_samples = sampling_batch * sampling_rate
     continuous_error_limit = 20
 
     while (synthetic_data.shape[0] < target_samples) and continuous_error_limit:
+        print("Generated samples:", synthetic_data.shape[0], target_samples)
         try:
             synthetic_split = model.sample(n_samples=split_samples, k=sampling_batch, device=device)
             if synthetic_data.empty:
@@ -71,7 +72,7 @@ def sample_great(model, target_samples: int, sampling_batch: int = 128, sampling
     if (continuous_error_limit == 0) and synthetic_data.shape[0] < target_samples:
         raise ValueError("Sampling failed...")
 
-    synthetic_data = synthetic_data.sample(n=target_samples, replace=False, random_state=random_state)
+    synthetic_data = synthetic_data.sample(n=target_samples, replace=False, max_length=2048, random_state=random_state)
     synthetic_data = synthetic_data.reset_index(drop="index")
 
     return synthetic_data
@@ -129,7 +130,19 @@ def train_sample(data_id: str, model_type: str, seed: int, sample_multiple: int 
 
 
 if __name__ == "__main__":
+    import sys
+    filter_data_ids = None
+    if len(sys.argv) > 1:
+        filter_data_ids = []
+        for arg in sys.argv[1:]:
+            if arg in DATA_IDS:
+                filter_data_ids.append(arg)
+
     for model_type in GREAT_MODEL_TYPES:
         for seed in SPLIT_SEEDS:
             for data_id in DATA_IDS:
+                if filter_data_ids and data_id not in filter_data_ids:
+                    print(f"Skipping {data_id}...")
+                    continue
+
                 train_sample(data_id, model_type, seed=seed)
