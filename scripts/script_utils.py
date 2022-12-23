@@ -72,9 +72,26 @@ def get_batch_size(data_id: str, model_type: str, return_accumulation: bool = Fa
             batch_size = 32  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
-    elif model_type in ["smallrealtabformer", "realtabformer", "bigrealtabformer"]:
+    elif model_type in ["smallrealtabformer", "realtabformer"]:
         cuda_count = torch.cuda.device_count()
         batch_size = max(MIN_BATCH_SIZE, target_batch_size // cuda_count // GRADIENT_ACCUMULATION_STEPS)
+
+    elif model_type == "bigrealtabformer":
+        cuda_count = torch.cuda.device_count()
+        batch_size = max(MIN_BATCH_SIZE, target_batch_size // cuda_count // GRADIENT_ACCUMULATION_STEPS)
+
+        if data_id == "california-housing":
+            batch_size = 32  # batch size for a single cuda device
+            gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
+
+        elif data_id == "heloc":
+            batch_size = 16  # batch size for a single cuda device
+            gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
+
+        elif data_id == "adult-income":
+            batch_size = 32  # batch size for a single cuda device
+            gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
+
 
     if return_accumulation:
         return batch_size, gradient_accumulation_steps
