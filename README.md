@@ -45,6 +45,17 @@ We use the github install since the pip package is not yet updated with the fix 
 pipenv install -e git+https://github.com/kathrinse/be_great@main#egg=be_great
 ```
 
+## Environment
+
+Miniconda can be installed, then simply create a python environment.
+
+```
+conda create --name py39 python=3.9
+conda activate py39
+pip install pipenv
+```
+
+
 # Data sources
 
 The following are the sources of the datasets used in the experiments:
