@@ -36,7 +36,7 @@ def sample_great(model, target_samples: int, sampling_batch: int = 256, sampling
     while (synthetic_data.shape[0] < target_samples) and continuous_error_limit:
         print("Generated samples:", synthetic_data.shape[0], target_samples)
         try:
-            synthetic_split = model.sample(n_samples=split_samples, k=sampling_batch, device=device)
+            synthetic_split = model.sample(n_samples=split_samples, k=sampling_batch, max_length=2048, device=device)
             if synthetic_data.empty:
                 synthetic_data = synthetic_split
             else:
@@ -72,7 +72,7 @@ def sample_great(model, target_samples: int, sampling_batch: int = 256, sampling
     if (continuous_error_limit == 0) and synthetic_data.shape[0] < target_samples:
         raise ValueError("Sampling failed...")
 
-    synthetic_data = synthetic_data.sample(n=target_samples, replace=False, max_length=2048, random_state=random_state)
+    synthetic_data = synthetic_data.sample(n=target_samples, replace=False, random_state=random_state)
     synthetic_data = synthetic_data.reset_index(drop="index")
 
     return synthetic_data
