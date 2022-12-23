@@ -68,6 +68,4 @@ if __name__ == "__main__":
     for model_type in SDV_MODEL_TYPES:
         for seed in SPLIT_SEEDS:
             for data_id in DATA_IDS:
-                if data_id == "adult-income" and model_type == "tvae":
-                    continue
                 train_sample(data_id, model_type, seed=seed)
