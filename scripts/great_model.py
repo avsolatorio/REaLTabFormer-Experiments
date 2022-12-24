@@ -68,6 +68,78 @@ def sample_great(model, target_samples: int, sampling_batch: int = 128, sampling
             continuous_error_limit -= 1
 
             print("IndexError encounterd, retrying...")
+        except RuntimeError:
+            # Generated samples: 15360 98710
+            # 85%|██████████████████████████████████████████████████████████████████████████████████████████▎               | 2182/2560 [00:52<00:07, 51.01it/s]../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [0,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [1,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [2,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [3,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [4,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [5,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [6,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [7,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [8,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [9,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [10,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [11,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [12,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [13,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [14,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [15,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [16,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [17,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [18,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [19,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [20,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [21,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [22,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [23,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [24,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [25,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [26,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [27,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [28,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [29,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [30,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # ../aten/src/ATen/native/cuda/Indexing.cu:1141: indexSelectLargeIndex: block: [18,0,0], thread: [31,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+            # 85%|██████████████████████████████████████████████████████████████████████████████████████████▎               | 2182/2560 [00:58<00:10, 37.45it/s]
+            # Traceback (most recent call last):
+            # File "/home/jupyter-wb536061/REaLTabFormer-Experiments/be-great-env/../scripts/great_model.py", line 148, in <module>
+            #     train_sample(data_id, model_type, seed=seed)
+            # File "/home/jupyter-wb536061/REaLTabFormer-Experiments/be-great-env/../scripts/great_model.py", line 125, in train_sample
+            #     samples = sample_great(model, target_samples=sample_multiple * len(payload["data"]), random_state=seed)
+            # File "/home/jupyter-wb536061/REaLTabFormer-Experiments/be-great-env/../scripts/great_model.py", line 39, in sample_great
+            #     synthetic_split = model.sample(n_samples=split_samples, k=sampling_batch, max_length=2048, device=device)
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/src/be-great/be_great/great.py", line 157, in sample
+            #     tokens = self.model.generate(input_ids=start_tokens, max_length=max_length,
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/torch/autograd/grad_mode.py", line 27, in decorate_context
+            #     return func(*args, **kwargs)
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/transformers/generation/utils.py", line 1571, in generate
+            #     return self.sample(
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/transformers/generation/utils.py", line 2534, in sample
+            #     outputs = self(
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+            #     return forward_call(*input, **kwargs)
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 1046, in forward
+            #     transformer_outputs = self.transformer(
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+            #     return forward_call(*input, **kwargs)
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 889, in forward
+            #     outputs = block(
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+            #     return forward_call(*input, **kwargs)
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 389, in forward
+            #     attn_outputs = self.attn(
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+            #     return forward_call(*input, **kwargs)
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 330, in forward
+            #     attn_output, attn_weights = self._attn(query, key, value, attention_mask, head_mask)
+            # File "/home/jupyter-wb536061/.local/share/virtualenvs/be-great-env-BAUbSh5F/lib/python3.9/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 201, in _attn
+            #     attn_weights = torch.where(causal_mask, attn_weights, mask_value)
+            # RuntimeError: The size of tensor a (1024) must match the size of tensor b (1025) at non-singleton dimension 3
+
+            continuous_error_limit -= 1
+            print("RuntimeError encounterd, retrying...")
 
     if (continuous_error_limit == 0) and synthetic_data.shape[0] < target_samples:
         raise ValueError("Sampling failed...")
