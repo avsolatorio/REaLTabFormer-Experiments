@@ -106,7 +106,12 @@ def train_sample(data_id: str, model_type: str, seed: int, sample_multiple: int 
     if not model_fname.exists():
         # Set checkpoint directory
         model.checkpoints_dir = experiment_dir
-        model.training_args_kwargs["output_dir"] = model.checkpoints_dir.as_posix()
+        if Path("/content").exists():
+            print("In colab....")
+            # We are in colab???
+            model.training_args_kwargs["output_dir"] = (Path("/content") / model.checkpoints_dir.name).as_posix()
+        else:
+            model.training_args_kwargs["output_dir"] = model.checkpoints_dir.as_posix()
         model.samples_save_dir = samples_dir
 
         model.fit(
