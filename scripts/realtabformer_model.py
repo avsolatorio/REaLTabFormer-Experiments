@@ -121,6 +121,7 @@ def train_sample(data_id: str, model_type: str, seed: int, sample_multiple: int 
             num_bootstrap=500,
             sensitivity_max_col_nums=5,
             use_ks=False,
+            full_sensitivity=False,
         )
         # Save the trained model
         model.save(path=model_fname)
