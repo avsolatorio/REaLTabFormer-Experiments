@@ -1,3 +1,4 @@
+import os
 import random
 import numpy as np
 import pandas as pd
@@ -126,6 +127,8 @@ def train_sample(data_id: str, model_type: str, seed: int, sample_multiple: int 
         # Save the trained model
         model.save(path=model_fname)
     else:
+        model_fname = sorted(model_fname.glob("*/rtf_config.json"), key=os.path.getmtime)[-1]
+        model_fname = model_fname.parent
         model = model.load_from_dir(model_fname.as_posix())
 
     # Generate samples
