@@ -68,7 +68,7 @@ The following are the sources of the datasets used in the experiments:
 - **Online News Popularity Dataset**: https://archive.ics.uci.edu/ml/datasets/online+news+popularity
 - **Predict Diabetes Dataset**: https://www.kaggle.com/datasets/whenamancodes/predict-diabities
 - **Mobile Price Dataset**: https://www.kaggle.com/datasets/iabhishekofficial/mobile-price-classification
-
+- **Oil Spill Dataset**: https://www.kaggle.com/datasets/sudhanshu2198/oil-spill-detection
 
 # Data summary
 
@@ -184,7 +184,7 @@ Variables annotated with `^` implies categorical data.
 - Number of observations: 2000
 - Numeric columns: 14
 - Categorical columns: 7
-- Target variable: "Outcome"
+- Target variable: "price_range"
 - Positive target value: 3
 - Target classes: [0, 1, 2, 3]
 - Missing values: None
@@ -211,6 +211,68 @@ Variables annotated with `^` implies categorical data.
     - touch_screen       int64^
     - wifi               int64^
     - price_range        int64^</pre>
+
+## Oil Spill Dataset
+
+- Number of observations: 937
+- Numeric columns: 49
+- Categorical columns: 1
+- Target variable: "target"
+- Positive target value: 1
+- Target classes: [0, 1]
+- Missing values: None
+- Variable types:
+  <pre>
+    - f_1         int64
+    - f_2         int64
+    - f_3       float64
+    - f_4       float64
+    - f_5         int64
+    - f_6         int64
+    - f_7       float64
+    - f_8       float64
+    - f_9       float64
+    - f_10      float64
+    - f_11      float64
+    - f_12      float64
+    - f_13      float64
+    - f_14      float64
+    - f_15      float64
+    - f_16      float64
+    - f_17      float64
+    - f_18      float64
+    - f_19      float64
+    - f_20      float64
+    - f_21      float64
+    - f_22      float64
+    - f_23        int64
+    - f_24      float64
+    - f_25      float64
+    - f_26      float64
+    - f_27      float64
+    - f_28      float64
+    - f_29      float64
+    - f_30      float64
+    - f_31      float64
+    - f_32      float64
+    - f_33      float64
+    - f_34      float64
+    - f_35        int64
+    - f_36        int64
+    - f_37      float64
+    - f_38      float64
+    - f_39        int64
+    - f_40        int64
+    - f_41      float64
+    - f_42      float64
+    - f_43      float64
+    - f_44      float64
+    - f_45      float64
+    - f_46        int64
+    - f_47      float64
+    - f_48      float64
+    - f_49      float64
+    - target      int64^</pre>
 
 # Generating dataset splits
 
