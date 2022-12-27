@@ -273,6 +273,8 @@ Variables annotated with `^` implies categorical data.
     - f_48      float64
     - f_49      float64
     - target      int64^</pre>
+- Notes:
+  - Dropped variable `f_23` in the data since there is no variability in it. All values is zero across observations.
 
 # Generating dataset splits
 
