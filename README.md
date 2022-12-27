@@ -66,6 +66,7 @@ The following are the sources of the datasets used in the experiments:
 - **California Housing Dataset**: https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset
 - **Beijing PM2.5 Dataset**: https://archive.ics.uci.edu/ml/datasets/Beijing+PM2.5+Data
 - **Online News Popularity Dataset**: https://archive.ics.uci.edu/ml/datasets/online+news+popularity
+- **Predict Diabetes Dataset**: https://www.kaggle.com/datasets/whenamancodes/predict-diabities
 
 # Data summary
 
@@ -152,6 +153,28 @@ The following are the sources of the datasets used in the experiments:
     - AccountSyncedToSocialMedia    object
     - BookedHotelOrNot              object
     - Target                         int64</pre>
+
+## Predict Diabetes Dataset
+
+- Number of observations: 768
+- Numeric columns: 9
+- Categorical columns: 0
+- Target variable: "Outcome"
+- Positive target value: 1
+- Target classes: [0, 1]
+- Missing values: None
+- Variable types:
+  <pre>
+    - Pregnancies                   int64
+    - Glucose                       int64
+    - BloodPressure                 int64
+    - SkinThickness                 int64
+    - Insulin                       int64
+    - BMI                         float64
+    - DiabetesPedigreeFunction    float64
+    - Age                           int64
+    - Outcome                       int64</pre>
+
 
 # Generating dataset splits
 
