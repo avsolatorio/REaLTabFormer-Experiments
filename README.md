@@ -67,8 +67,12 @@ The following are the sources of the datasets used in the experiments:
 - **Beijing PM2.5 Dataset**: https://archive.ics.uci.edu/ml/datasets/Beijing+PM2.5+Data
 - **Online News Popularity Dataset**: https://archive.ics.uci.edu/ml/datasets/online+news+popularity
 - **Predict Diabetes Dataset**: https://www.kaggle.com/datasets/whenamancodes/predict-diabities
+- **Mobile Price Dataset**: https://www.kaggle.com/datasets/iabhishekofficial/mobile-price-classification
+
 
 # Data summary
+
+Variables annotated with `^` implies categorical data.
 
 ## Adult Income Dataset
 
@@ -138,8 +142,8 @@ The following are the sources of the datasets used in the experiments:
 ## Travel Customers Dataset
 
 - Number of observations: 954
-- Numeric columns: 3
-- Categorical columns: 4
+- Numeric columns: 2
+- Categorical columns: 5
 - Target variable: "Target"
 - Positive target value: 1
 - Target classes: [0, 1]
@@ -152,13 +156,13 @@ The following are the sources of the datasets used in the experiments:
     - ServicesOpted                  int64
     - AccountSyncedToSocialMedia    object
     - BookedHotelOrNot              object
-    - Target                         int64</pre>
+    - Target                         int64^</pre>
 
 ## Predict Diabetes Dataset
 
 - Number of observations: 768
-- Numeric columns: 9
-- Categorical columns: 0
+- Numeric columns: 8
+- Categorical columns: 1
 - Target variable: "Outcome"
 - Positive target value: 1
 - Target classes: [0, 1]
@@ -173,8 +177,40 @@ The following are the sources of the datasets used in the experiments:
     - BMI                         float64
     - DiabetesPedigreeFunction    float64
     - Age                           int64
-    - Outcome                       int64</pre>
+    - Outcome                       int64^</pre>
 
+## Mobile Price Dataset
+
+- Number of observations: 2000
+- Numeric columns: 14
+- Categorical columns: 7
+- Target variable: "Outcome"
+- Positive target value: 3
+- Target classes: [0, 1, 2, 3]
+- Missing values: None
+- Variable types:
+  <pre>
+    - battery_power      int64
+    - blue               int64^
+    - clock_speed      float64
+    - dual_sim           int64^
+    - fc                 int64
+    - four_g             int64^
+    - int_memory         int64
+    - m_dep            float64
+    - mobile_wt          int64
+    - n_cores            int64
+    - pc                 int64
+    - px_height          int64
+    - px_width           int64
+    - ram                int64
+    - sc_h               int64
+    - sc_w               int64
+    - talk_time          int64
+    - three_g            int64^
+    - touch_screen       int64^
+    - wifi               int64^
+    - price_range        int64^</pre>
 
 # Generating dataset splits
 
