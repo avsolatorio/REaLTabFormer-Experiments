@@ -69,6 +69,7 @@ The following are the sources of the datasets used in the experiments:
 - **Predict Diabetes Dataset**: https://www.kaggle.com/datasets/whenamancodes/predict-diabities
 - **Mobile Price Dataset**: https://www.kaggle.com/datasets/iabhishekofficial/mobile-price-classification
 - **Oil Spill Dataset**: https://www.kaggle.com/datasets/sudhanshu2198/oil-spill-detection
+- **Customer Personality Dataset**: https://www.kaggle.com/datasets/imakash3011/customer-personality-analysis
 
 # Data summary
 
@@ -275,6 +276,49 @@ Variables annotated with `^` implies categorical data.
     - target      int64^</pre>
 - Notes:
   - Dropped variable `f_23` in the data since there is no variability in it. All values is zero across observations.
+
+## Customer Personality Dataset
+
+- Number of observations: 2240
+- Numeric columns: 29 - 7 - 3
+- Categorical columns: 7
+- Target variable: "Response"
+- Positive target value: 1
+- Target classes: [0, 1]
+- Missing values: None
+- Variable types:
+  <pre>
+    - ID                       int64@
+    - Year_Birth               int64
+    - Education               object
+    - Marital_Status          object
+    - Income                 float64
+    - Kidhome                  int64
+    - Teenhome                 int64
+    - Dt_Customer             object
+    - Recency                  int64
+    - MntWines                 int64
+    - MntFruits                int64
+    - MntMeatProducts          int64
+    - MntFishProducts          int64
+    - MntSweetProducts         int64
+    - MntGoldProds             int64
+    - NumDealsPurchases        int64
+    - NumWebPurchases          int64
+    - NumCatalogPurchases      int64
+    - NumStorePurchases        int64
+    - NumWebVisitsMonth        int64
+    - AcceptedCmp3             int64^
+    - AcceptedCmp4             int64^
+    - AcceptedCmp5             int64^
+    - AcceptedCmp1             int64^
+    - AcceptedCmp2             int64^
+    - Complain                 int64^
+    - Z_CostContact            int64@
+    - Z_Revenue                int64@
+    - Response                 int64^</pre>
+- Notes:
+  - We drop 24 observations with missing value for the `Income` variable. We also drop the `ID` variable. We also drop th `Z_CostContact` and `Z_Revenue` variables due to no variability. The `Z_CostContact` variable all has `3` as its value while the `Z_Revenue` variable all has `11` for its value.
 
 # Generating dataset splits
 
