@@ -1,13 +1,73 @@
 from pathlib import Path
+from dataclasses import dataclass, fields
+
+
+@dataclass(frozen=True)
+class SDVModelType:
+    ctgan: str = "ctgan"
+    tvae: str = "tvae"
+    copulagan: str = "copulagan"
+    gaussiancopula: str = "gaussiancopula"
+
+    @staticmethod
+    def types():
+        return [field.default for field in fields(SDVModelType)]
+
+
+@dataclass(frozen=True)
+class GReaTModelType:
+    distillgreat: str = "distillgreat"
+    great: str = "great"
+
+    @staticmethod
+    def types():
+        return [field.default for field in fields(GReaTModelType)]
+
+
+@dataclass(frozen=True)
+class REaLTabFormerModelType:
+    realtabformer: str = "realtabformer"
+    smallrealtabformer: str = "smallrealtabformer"
+    bigrealtabformer: str = "bigrealtabformer"
+
+    @staticmethod
+    def types():
+        return [field.default for field in fields(REaLTabFormerModelType)]
+
+
+@dataclass(frozen=True)
+class ModelType(SDVModelType, GReaTModelType, REaLTabFormerModelType):
+
+    @staticmethod
+    def types():
+        types = []
+        types.extend([field.default for field in fields(SDVModelType)])
+        types.extend([field.default for field in fields(GReaTModelType)])
+        types.extend([field.default for field in fields(REaLTabFormerModelType)])
+
+        return types
+
+
+@dataclass(frozen=True)
+class ColDataType:
+    NUMERIC: str = "NUMERIC"
+    DATETIME: str = "DATETIME"
+    CATEGORICAL: str = "CATEGORICAL"
+
+    @staticmethod
+    def types():
+        return [field.default for field in fields(ColDataType)]
+
+
 
 DATA_IDS = ["california-housing", "travel-customers", "adult-income", "heloc"]
 SPLIT_SEEDS = [610, 1029, 1004, 2019, 2009]
 RANDOM_SEED = 1029
 
-SDV_MODEL_TYPES = ["ctgan", "tvae", "copulagan", "gaussiancopula"]
-GREAT_MODEL_TYPES = ["distillgreat", "great"]
-REALTABFORMER_MODEL_TYPES = ["realtabformer", "smallrealtabformer", "bigrealtabformer"]
-MODEL_TYPES = SDV_MODEL_TYPES + GREAT_MODEL_TYPES + REALTABFORMER_MODEL_TYPES
+SDV_MODEL_TYPES = SDVModelType.types()
+GREAT_MODEL_TYPES = GReaTModelType.types()
+REALTABFORMER_MODEL_TYPES = REaLTabFormerModelType.types()
+MODEL_TYPES = ModelType.types()
 
 BASE_DIR = Path(__file__).parent.parent / "data"
 assert BASE_DIR.exists(), f"Make sure that the DATA_DIR ({BASE_DIR}) is correct..."
