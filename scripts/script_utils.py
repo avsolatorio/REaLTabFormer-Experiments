@@ -77,7 +77,7 @@ MIN_BATCH_SIZE = 4
 def get_data_target_batch_size(data_id: str) -> int:
     target_batch_size = 512
 
-    if data_id == "travel-customers":
+    if data_id == DataID.travel_customers:
         target_batch_size = 32
 
     return target_batch_size
@@ -103,15 +103,15 @@ def get_batch_size(data_id: str, model_type: str, return_accumulation: bool = Fa
         cuda_count = torch.cuda.device_count()
         batch_size = max(MIN_BATCH_SIZE, target_batch_size // cuda_count // GRADIENT_ACCUMULATION_STEPS)
 
-        if data_id == "california-housing":
+        if data_id == DataID.california_housing:
             batch_size = 64  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
-        elif data_id == "heloc":
+        elif data_id == DataID.heloc:
             batch_size = 32  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
-        elif data_id == "adult-income":
+        elif data_id == DataID.adult_income:
             batch_size = 64  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
@@ -119,15 +119,15 @@ def get_batch_size(data_id: str, model_type: str, return_accumulation: bool = Fa
         cuda_count = torch.cuda.device_count()
         batch_size = max(MIN_BATCH_SIZE, target_batch_size // cuda_count // GRADIENT_ACCUMULATION_STEPS)
 
-        if data_id == "california-housing":
+        if data_id == DataID.california_housing:
             batch_size = 32  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
-        elif data_id == "heloc":
+        elif data_id == DataID.heloc:
             batch_size = 16  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
-        elif data_id == "adult-income":
+        elif data_id == DataID.adult_income:
             batch_size = 32  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
@@ -139,15 +139,15 @@ def get_batch_size(data_id: str, model_type: str, return_accumulation: bool = Fa
         cuda_count = torch.cuda.device_count()
         batch_size = max(MIN_BATCH_SIZE, target_batch_size // cuda_count // GRADIENT_ACCUMULATION_STEPS)
 
-        if data_id == "california-housing":
+        if data_id == DataID.california_housing:
             batch_size = 32  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
-        elif data_id == "heloc":
+        elif data_id == DataID.heloc:
             batch_size = 16  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
-        elif data_id == "adult-income":
+        elif data_id == DataID.adult_income:
             batch_size = 32  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
@@ -168,18 +168,18 @@ def get_epochs(data_id: str, model_type: str) -> int:
         # for 200 epochs, except for the California housing data
         # set, for it, we fine-tune it for 100 epochs.
         epochs = 200
-        if data_id == "california-housing":
+        if data_id == DataID.california_housing:
             epochs = 100
     elif model_type == "great":
         # The GReaT baseline is fine-tuned for 110, 310, 400, 255 epochs
         # for California, Adult, Travel, and HELOC data sets, respectively.
-        if data_id == "california-housing":
+        if data_id == DataID.california_housing:
             epochs = 110
-        elif data_id == "adult-income":
+        elif data_id == DataID.adult_income:
             epochs = 310
-        elif data_id == "travel-customers":
+        elif data_id == DataID.travel_customers:
             epochs = 400
-        elif data_id == "heloc":
+        elif data_id == DataID.heloc:
             epochs = 255
     elif model_type == "gaussiancopula":
         # No epochs parameter
@@ -211,6 +211,7 @@ def get_dirs(data_id: str, model_type: str, return_checkpoint: bool = False):
         return EXP_DIR, DATA_DIR, save_dir, samples_save_dir, checkpoints_dir
     else:
         return EXP_DIR, DATA_DIR, save_dir, samples_save_dir
+
 
 def get_fnames(data_id: str, model_type: str, seed: int, epochs: int = None, verbose: bool = True):
     base_name = f"{data_id}_seed-{seed}"
