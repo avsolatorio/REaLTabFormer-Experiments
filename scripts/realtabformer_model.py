@@ -8,8 +8,11 @@ from pathlib import Path
 from realtabformer import REaLTabFormer
 
 from transformers import GPT2Config
-from script_utils import BASE_DIR, REALTABFORMER_MODEL_TYPES, GRADIENT_ACCUMULATION_STEPS, DATA_IDS, SPLIT_SEEDS, get_batch_size, get_epochs, get_dirs, get_fnames
-
+from script_utils import (
+    DataID, REaLTabFormerModelType,
+    BASE_DIR, REALTABFORMER_MODEL_TYPES, GRADIENT_ACCUMULATION_STEPS, DATA_IDS,
+    SPLIT_SEEDS, get_batch_size, get_epochs, get_dirs, get_fnames
+)
 
 
 def get_realtabformer_model(data_id: str, model_type: str, epochs: int = None, seed: int = 1029):
@@ -25,7 +28,7 @@ def get_realtabformer_model(data_id: str, model_type: str, epochs: int = None, s
         save_total_limit=1,
     )
 
-    if data_id == "heloc":
+    if data_id == DataID.heloc:
         n_critic = 5
         training_args_kwargs.update(
             dict(
@@ -35,7 +38,7 @@ def get_realtabformer_model(data_id: str, model_type: str, epochs: int = None, s
             )
         )
 
-    if data_id == "travel-customers":
+    if data_id == DataID.travel_customers:
         n_critic = 5
         training_args_kwargs.update(
             dict(
@@ -50,11 +53,11 @@ def get_realtabformer_model(data_id: str, model_type: str, epochs: int = None, s
     if epochs is None:
         epochs = get_epochs(data_id, model_type)
 
-    if model_type == "smallrealtabformer":
+    if model_type == REaLTabFormerModelType.smallrealtabformer:
         gpt_config = GPT2Config(n_layer=4, n_head=8, n_embd=512)
-    elif model_type == "realtabformer":
+    elif model_type == REaLTabFormerModelType.realtabformer:
         gpt_config = GPT2Config(n_layer=6, n_head=12, n_embd=768)
-    elif model_type == "bigrealtabformer":
+    elif model_type == REaLTabFormerModelType.bigrealtabformer:
         gpt_config = GPT2Config(n_layer=24, n_head=16, n_embd=1024)
     else:
         raise ValueError(f"Unknown model_type ({model_type}) for REaLTabFormer...")
