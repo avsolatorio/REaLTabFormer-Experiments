@@ -49,20 +49,19 @@ class ModelType(SDVModelType, GReaTModelType, REaLTabFormerModelType):
 
 
 @dataclass(frozen=True)
-class ColDataType:
-    NUMERIC: str = "NUMERIC"
-    DATETIME: str = "DATETIME"
-    CATEGORICAL: str = "CATEGORICAL"
+class DataID:
+    california_housing: str = "california-housing"
+    travel_customers: str = "travel-customers"
+    adult_income: str = "adult-income"
+    heloc: str = "heloc"
 
     @staticmethod
     def types():
-        return [field.default for field in fields(ColDataType)]
+        return [field.default for field in fields(DataID)]
 
 
-
-DATA_IDS = ["california-housing", "travel-customers", "adult-income", "heloc"]
+DATA_IDS = DataID.types()
 SPLIT_SEEDS = [610, 1029, 1004, 2019, 2009]
-RANDOM_SEED = 1029
 
 SDV_MODEL_TYPES = SDVModelType.types()
 GREAT_MODEL_TYPES = GReaTModelType.types()
