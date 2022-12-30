@@ -33,7 +33,7 @@ def get_realtabformer_model(data_id: str, model_type: str, epochs: int = None, s
         training_args_kwargs.update(
             dict(
                 logging_steps=50,
-                save_steps=50,
+                # save_steps=50,
                 eval_steps=50,
             )
         )
@@ -43,7 +43,7 @@ def get_realtabformer_model(data_id: str, model_type: str, epochs: int = None, s
         training_args_kwargs.update(
             dict(
                 logging_steps=5,
-                save_steps=5,
+                # save_steps=5,
                 eval_steps=5,
             )
         )
