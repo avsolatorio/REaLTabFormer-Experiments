@@ -167,6 +167,33 @@ def load_customer_personality(data_id: str, data_path: Path, random_state: int, 
     )
 
 
+def load_mobile_price(data_id: str, data_path: Path, random_state: int, frac: float = 0.8) -> dict:
+    assert data_id == "mobile-price"
+
+    raw_dir = data_path / "raw"
+
+    target_col = "price_range"
+    target_pos_val = [0, 1, 2, 3]
+
+    _data = pd.read_csv(raw_dir / "train.csv")
+
+    # Place the target col as the last column
+    _data = pd.concat([_data.drop(target_col, axis=1), _data[target_col]], axis=1)
+
+    train_data, test_data = train_test_split(_data, train_size=frac, random_state=random_state, stratify=_data[target_col])
+
+    return dict(
+        data_id=data_id,
+        data=_data,
+        frac=frac,
+        seed=random_state,
+        train=train_data,
+        test=test_data,
+        target_col=target_col,
+        target_pos_val=target_pos_val
+    )
+
+
 def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac: float = 0.8, return_payload: bool = False) -> Optional[dict]:
     assert data_id in DATA_IDS
 
@@ -177,19 +204,17 @@ def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac:
         print(f"Data split exists: {part_path}", flush=True)
         return
 
-    if data_id == "california-housing":
-        payload = load_california_housing(data_id, data_path, random_state, frac)
-    elif data_id == "heloc":
-        payload = load_heloc(data_id, data_path, random_state, frac)
-    elif data_id == "adult-income":
-        payload = load_adult_income(data_id, data_path, random_state, frac)
-    elif data_id == "travel-customers":
-        payload = load_travel_customers(data_id, data_path, random_state, frac)
-    elif data_id == "customer-personality":
-        payload = load_customer_personality(data_id, data_path, random_state, frac)
+    if data_id == "california-housing": load_func = load_california_housing
+    elif data_id == "heloc": load_func = load_heloc
+    elif data_id == "adult-income": load_func = load_adult_income
+    elif data_id == "travel-customers": load_func = load_travel_customers
+    elif data_id == "customer-personality": load_func = load_customer_personality
+    elif data_id == "mobile-price": load_func = load_mobile_price
     else:
         warnings.warn(f"The data_id ({data_id}) has no data loader implementation yet. Skipping...")
         return
+
+    payload = load_func(data_id, data_path, random_state, frac)
 
     assert not any(payload["data"].index.duplicated()), "The data has non-unique index values. Please reindex the data."
 
