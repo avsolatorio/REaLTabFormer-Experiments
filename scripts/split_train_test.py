@@ -194,6 +194,35 @@ def load_mobile_price(data_id: str, data_path: Path, random_state: int, frac: fl
     )
 
 
+def load_oil_spill(data_id: str, data_path: Path, random_state: int, frac: float = 0.8) -> dict:
+    assert data_id == "oil-spill"
+
+    raw_dir = data_path / "raw"
+
+    target_col = "target"
+    target_pos_val = 1
+
+    _data = pd.read_csv(raw_dir / "oil_spill.csv")
+    _data.drop(["f_23"], axis=1, inplace=True)
+
+    # Place the target col as the last column
+    _data = pd.concat([_data.drop(target_col, axis=1), _data[target_col]], axis=1)
+
+    train_data, test_data = train_test_split(_data, train_size=frac, random_state=random_state, stratify=_data[target_col])
+
+    return dict(
+        data_id=data_id,
+        data=_data,
+        frac=frac,
+        seed=random_state,
+        train=train_data,
+        test=test_data,
+        target_col=target_col,
+        target_pos_val=target_pos_val
+    )
+
+
+
 def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac: float = 0.8, return_payload: bool = False) -> Optional[dict]:
     assert data_id in DATA_IDS
 
@@ -210,6 +239,7 @@ def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac:
     elif data_id == "travel-customers": load_func = load_travel_customers
     elif data_id == "customer-personality": load_func = load_customer_personality
     elif data_id == "mobile-price": load_func = load_mobile_price
+    elif data_id == "oil-spill": load_func = load_oil_spill
     else:
         warnings.warn(f"The data_id ({data_id}) has no data loader implementation yet. Skipping...")
         return
