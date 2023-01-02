@@ -146,7 +146,7 @@ def load_customer_personality(data_id: str, data_path: Path, random_state: int, 
     target_col = "Response"
     target_pos_val = 1
 
-    _data = pd.read_csv(raw_dir / "marketing_campaign.csv")
+    _data = pd.read_csv(raw_dir / "marketing_campaign.csv", sep="\t")
     _data.drop(["ID", "Z_CostContact", "Z_Revenue"], axis=1, inplace=True)
     _data.dropna(subset=["Income"], inplace=True)
 
