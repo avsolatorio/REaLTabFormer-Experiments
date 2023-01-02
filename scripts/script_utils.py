@@ -54,6 +54,10 @@ class DataID:
     travel_customers: str = "travel-customers"
     adult_income: str = "adult-income"
     heloc: str = "heloc"
+    customer_personality: str = "customer-personality"
+    mobile_price: str = "mobile-price"
+    oil_spill: str = "oil-spill"
+    predict_diabetes: str = "predict-diabetes"
 
     @staticmethod
     def types():
