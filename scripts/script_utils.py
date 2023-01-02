@@ -81,8 +81,12 @@ MIN_BATCH_SIZE = 4
 def get_data_target_batch_size(data_id: str) -> int:
     target_batch_size = 512
 
-    if data_id == DataID.travel_customers:
+    if data_id in [DataID.travel_customers, DataID.predict_diabetes, DataID.oil_spill]:
+        # Below 1,000 observations
         target_batch_size = 32
+    elif data_id in [DataID.mobile_price, DataID.customer_personality]:
+        # Around 2,000 observations
+        target_batch_size = 64
 
     return target_batch_size
 
