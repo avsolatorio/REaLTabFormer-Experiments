@@ -138,6 +138,35 @@ def load_travel_customers(data_id: str, data_path: Path, random_state: int, frac
     )
 
 
+def load_customer_personality(data_id: str, data_path: Path, random_state: int, frac: float = 0.8) -> dict:
+    assert data_id == "customer-personality"
+
+    raw_dir = data_path / "raw"
+
+    target_col = "Response"
+    target_pos_val = 1
+
+    _data = pd.read_csv(raw_dir / "marketing_campaign.csv")
+    _data.drop(["ID", "Z_CostContact", "Z_Revenue"], axis=1, inplace=True)
+    _data.dropna(subset=["Income"], inplace=True)
+
+    # Place the target col as the last column
+    _data = pd.concat([_data.drop(target_col, axis=1), _data[target_col]], axis=1)
+
+    train_data, test_data = train_test_split(_data, train_size=frac, random_state=random_state, stratify=_data[target_col])
+
+    return dict(
+        data_id=data_id,
+        data=_data,
+        frac=frac,
+        seed=random_state,
+        train=train_data,
+        test=test_data,
+        target_col=target_col,
+        target_pos_val=target_pos_val
+    )
+
+
 def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac: float = 0.8, return_payload: bool = False) -> Optional[dict]:
     assert data_id in DATA_IDS
 
@@ -156,6 +185,8 @@ def load_split_save_data(data_id: str, data_path: Path, random_state: int, frac:
         payload = load_adult_income(data_id, data_path, random_state, frac)
     elif data_id == "travel-customers":
         payload = load_travel_customers(data_id, data_path, random_state, frac)
+    elif data_id == "customer-personality":
+        payload = load_customer_personality(data_id, data_path, random_state, frac)
     else:
         warnings.warn(f"The data_id ({data_id}) has no data loader implementation yet. Skipping...")
         return
