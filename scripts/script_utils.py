@@ -135,7 +135,7 @@ def get_batch_size(data_id: str, model_type: str, return_accumulation: bool = Fa
             batch_size = 32  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
-        elif data_id == DataID.heloc:
+        elif data_id in [DataID.heloc, DataID.predict_diabetes]:
             batch_size = 16  # batch size for a single cuda device
             gradient_accumulation_steps = target_batch_size // cuda_count // batch_size
 
