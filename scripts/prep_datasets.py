@@ -223,7 +223,7 @@ def _save(
             else:
                 data = data[0]
 
-            data[cols["target"]] = target
+            data[cols["target"]] = target[dpart]
 
             if part_idx:
                 data.index = part_idx[dpart]
