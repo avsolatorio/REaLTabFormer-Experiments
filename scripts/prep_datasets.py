@@ -35,7 +35,7 @@ CAT_MISSING_VALUE = '__nan__'
 
 EXPECTED_FILES = {
     'abalone': ['dataset_187_abalone.arff', 'abalone_idx.json'],
-    'adult': [],
+    # 'adult': [],
     # 'buddy': [],
     'california': [],
     'cardio': ['cardio_train.csv', 'cardio_idx.json'],
@@ -572,9 +572,9 @@ def facebook_comments_volume(keep_derived: bool):
 
     # Store idx
     idx = {
-        "train": dfs["train"].index.tolist(),
-        "val": dfs["val"].index.tolist(),
-        "test": dfs["test"].index.tolist(),
+        "train": np.array(dfs["train"].index.tolist()),
+        "val": np.array(dfs["val"].index.tolist()),
+        "test": np.array(dfs["test"].index.tolist()),
     }
 
     _save(
@@ -775,7 +775,7 @@ def main(argv):
 
     # OpenML
     abalone()
-    adult()  # CatBoost *
+    # adult()  # CatBoost *
     # buddy()
     california_housing()  # Scikit-Learn *
     cardio()
