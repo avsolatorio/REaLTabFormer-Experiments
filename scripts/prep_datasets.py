@@ -226,7 +226,7 @@ def _save(
             data[cols["target"]] = target
 
             if part_idx:
-                data.index = part_idx
+                data.index = part_idx[dpart]
 
             joblib.dump(data, dataset_dir / f'full_{dpart}.df.pkl')
 
