@@ -340,19 +340,23 @@ def churn_modelling():
     df = df.drop(columns=['RowNumber', 'CustomerId', 'Surname'])
     df['Gender'] = df['Gender'].astype('category').cat.codes.values.astype(np.int64)
     y_all = df.pop('Exited').values.astype(np.int64)
+
+    # Make dataset consistent with the data used in https://github.com/rotot0/tab-ddpm.
+    # We move the variables ['Gender', 'HasCrCard', 'IsActiveMember'] to the cat_columns
+    # since the nunique == 2 for these variables.
     num_columns = [
         'CreditScore',
-        'Gender',
+        # 'Gender',
         'Age',
         'Tenure',
         'Balance',
         'NumOfProducts',
         'EstimatedSalary',
-        'HasCrCard',
-        'IsActiveMember',
+        # 'HasCrCard',
+        # 'IsActiveMember',
         'EstimatedSalary',
     ]
-    cat_columns = ['Geography']
+    cat_columns = ['Geography', 'Gender', 'HasCrCard', 'IsActiveMember']
     assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
     X_num_all = df[num_columns].astype(np.float32).values
     X_cat_all = df[cat_columns].astype(str).values
