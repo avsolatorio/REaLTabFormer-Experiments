@@ -400,6 +400,12 @@ def facebook_comments_volume(keep_derived: bool):
 
     cat_columns = ['c3']
     num_columns = dfs['train'].columns.difference(cat_columns + ['target'])
+
+    # Make dataset consistent with the data used in https://github.com/rotot0/tab-ddpm.
+    nunique = dfs['train'][num_columns].nunique()
+    num_columns = nunique[nunique > 2].index
+    cat_columns.extend([c for c in nunique.index if c not in num_columns])
+
     _save(
         dataset_dir,
         'Facebook Comments Volume'
