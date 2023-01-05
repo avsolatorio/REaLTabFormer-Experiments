@@ -621,6 +621,17 @@ def higgs_small():
     dataset_dir, _ = _start('higgs-small')
     bunch = _fetch_openml(23512)
 
+    target_col = "target"
+
+    num_columns = bunch['data'].columns.tolist()
+    cat_columns = []
+
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns,
+        "target": target_col
+    }
+
     X_num_all = bunch['data'].values.astype(np.float32)
     y_all = _encode_classification_target(bunch['target'].cat.codes.values)
     nan_mask = np.isnan(X_num_all)
@@ -638,12 +649,24 @@ def higgs_small():
         **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
         X_cat=None,
         idx=idx,
+        cols=cols,
     )
 
 
 def house_16h():
     dataset_dir, _ = _start('house')
     bunch = _fetch_openml(574)
+
+    target_col = "target"
+
+    num_columns = bunch['data'].columns.tolist()
+    cat_columns = []
+
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns,
+        "target": target_col
+    }
 
     X_num_all = bunch['data'].values.astype(np.float32)
     y_all = bunch['target'].values.astype(np.float32)
@@ -656,6 +679,7 @@ def house_16h():
         **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
         X_cat=None,
         idx=idx,
+        cols=cols,
     )
 
 
