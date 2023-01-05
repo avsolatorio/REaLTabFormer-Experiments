@@ -532,8 +532,10 @@ def facebook_comments_volume(keep_derived: bool):
     csv_path = 'Dataset/Training/Features_Variant_5.csv'
     _unzip(files[0], [csv_path])
 
+    target_col = "target"
+
     df = pd.read_csv(
-        dataset_dir / csv_path, names=[f'c{i}' for i in range(53)] + ['target']
+        dataset_dir / csv_path, names=[f'c{i}' for i in range(53)] + [target_col]
     )
     extra_columns = {'c14', 'c37'}
     if not keep_derived:
@@ -546,17 +548,30 @@ def facebook_comments_volume(keep_derived: bool):
     dfs['val'], dfs['test'] = train_test_split(
         dfs['test'], random_state=seed, test_size=0.5
     )
-    max_target_value = dfs['train']['target'].quantile(0.99)  # type: ignore[code]
-    dfs = {k: v[v['target'] <= max_target_value] for k, v in dfs.items()}
+    max_target_value = dfs['train'][target_col].quantile(0.99)  # type: ignore[code]
+    dfs = {k: v[v[target_col] <= max_target_value] for k, v in dfs.items()}
 
     cat_columns = ['c3']
     # Using difference here is fine because the column names are alphabetical.
-    num_columns = dfs['train'].columns.difference(cat_columns + ['target'])
+    num_columns = dfs['train'].columns.difference(cat_columns + [target_col])
 
     # Make dataset consistent with the data used in https://github.com/rotot0/tab-ddpm.
     nunique = dfs['train'][num_columns].nunique()
     num_columns = nunique[nunique > 2].index
     cat_columns.extend([c for c in nunique.index if c not in num_columns])
+
+    cols = {
+        "num": num_columns.tolist(),
+        "cat": cat_columns,
+        "target": target_col
+    }
+
+    # Store idx
+    idx = {
+        "train": dfs["train"].index.tolist(),
+        "val": dfs["val"].index.tolist(),
+        "test": dfs["test"].index.tolist(),
+    }
 
     _save(
         dataset_dir,
@@ -565,10 +580,11 @@ def facebook_comments_volume(keep_derived: bool):
         TaskType.REGRESSION,
         X_num={k: v[num_columns].astype(np.float32).values for k, v in dfs.items()},
         X_cat={k: v[cat_columns].astype(str).values for k, v in dfs.items()},
-        y={k: v['target'].astype(np.float32).values for k, v in dfs.items()},
-        idx=None,
+        y={k: v[target_col].astype(np.float32).values for k, v in dfs.items()},
+        idx=idx,
         id_='fb-comments--'
         + ('default' if keep_derived else 'without-derived-features'),
+        cols=cols,
     )
 
 
