@@ -36,17 +36,22 @@ CAT_MISSING_VALUE = '__nan__'
 EXPECTED_FILES = {
     'abalone': ['dataset_187_abalone.arff', 'abalone_idx.json'],
     'adult': [],
+    # 'buddy': [],
     'california': [],
     'cardio': ['cardio_train.csv', 'cardio_idx.json'],
     # Source: https://www.kaggle.com/shrutimechlearn/churn-modelling
     'churn2': ['Churn_Modelling.csv'],
+    # 'default': [],
     'diabetes': ['dataset_37_diabetes.arff', 'diabetes_idx.json'],
     # Source: https://archive.ics.uci.edu/ml/machine-learning-databases/00363/Dataset.zip
     'fb-comments': ['Dataset.zip'],
     'gesture': [],
     'higgs-small': [],
     'house': [],
-    'insurance': ['insurance.csv', 'insurance_idx.json']
+    'insurance': ['insurance.csv', 'insurance_idx.json'],
+    # 'king': [],
+    # 'miniboone': [],
+    # 'wilt': [],
 }
 EXPECTED_FILES['fb-c'] = EXPECTED_FILES['wd-fb-comments'] = EXPECTED_FILES[
     'fb-comments'
