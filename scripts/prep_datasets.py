@@ -35,6 +35,7 @@ CAT_MISSING_VALUE = '__nan__'
 
 EXPECTED_FILES = {
     'abalone': ['dataset_187_abalone.arff', 'abalone_idx.json'],
+    'cardio': ['cardio_train.csv', 'cardio_idx.json'],
     'diabetes': ['dataset_37_diabetes.arff', 'diabetes_idx.json'],
     'gesture': [],
     'house': [],
@@ -344,7 +345,46 @@ def california_housing():
 
 
 def cardio():
-    pass
+    data_id = "cardio"
+    dataset_dir, files = _start(data_id)
+    target_col = "cardio"
+
+    df = pd.read_csv(files[0], sep=";")
+    y_all = df.pop(target_col).values.astype(np.int64)
+
+    num_columns = [
+        "age",
+        "height",
+        "weight",
+        "ap_hi",
+        "ap_lo"
+    ]
+
+    cat_columns = df.columns.difference(num_columns)
+    assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
+    X_num_all = df[num_columns].astype(np.float64).values
+    X_cat_all = df[cat_columns].astype(str).values
+
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns.tolist(),
+        "target": target_col
+    }
+
+    idx = _load_idx(data_id, files[1])
+
+    _save(
+        dataset_dir,
+        'Cardio',
+        TaskType.BINCLASS,
+        **_apply_split(
+            {'X_num': X_num_all, 'X_cat': X_cat_all, 'y': y_all},
+            idx,
+        ),
+        idx=idx,
+        float_type=np.float64,
+        cols=cols,
+    )
 
 
 def churn2_modelling():
