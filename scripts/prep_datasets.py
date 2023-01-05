@@ -691,19 +691,21 @@ def main(argv):
 
     # OpenML
     abalone()
-    gesture_phase()  # *
-    house_16h()  # *
-    higgs_small()  # *
-
-    # Kaggle
-    churn2_modelling()
-
-    # UCI
-    facebook_comments_volume(True)  # *
-
-    # Python packages
-    california_housing()  # Scikit-Learn *
     adult()  # CatBoost *
+    # buddy()
+    california_housing()  # Scikit-Learn *
+    cardio()
+    churn2_modelling()
+    # default()
+    diabetes()
+    facebook_comments_volume(True)
+    gesture_phase()
+    higgs_small()
+    house_16h()
+    insurance()
+    # king()
+    # miniboone()
+    # wilt()
 
     print('-----')
     print('Done!')
