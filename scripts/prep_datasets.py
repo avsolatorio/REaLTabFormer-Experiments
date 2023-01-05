@@ -279,6 +279,12 @@ def abalone():
     X_num_all = df[num_columns].astype(np.float64).values
     X_cat_all = df[cat_columns].astype(str).values
 
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns,
+        "target": target_col
+    }
+
     idx = _load_idx('abalone', files[1])
 
     _save(
@@ -290,12 +296,14 @@ def abalone():
             idx,
         ),
         idx=idx,
-        float_type=np.float64
+        float_type=np.float64,
+        cols=cols
     )
 
 
 def adult():
     dataset_dir, _ = _start('adult')
+    target_col = "income"
 
     df_trainval, df_test = catboost.datasets.adult()
     df_trainval = cast(pd.DataFrame, df_trainval)
@@ -304,8 +312,13 @@ def adult():
     assert (df_trainval.columns == df_test.columns).all()
     categorical_mask = cast(pd.Series, df_trainval.dtypes != np.float64)
 
+    num_columns = categorical_mask[~categorical_mask].index.tolist()
+    cat_columns = [c for c in df_trainval.columns if c not in num_columns]
+    if target_col in cat_columns:
+        cat_columns.pop(target_col)
+
     def get_Xy(df: pd.DataFrame):
-        y = (df.pop('income') == '>50K').values.astype('int64')
+        y = (df.pop(target_col) == '>50K').values.astype('int64')
         return {
             'X_num': df.loc[:, ~categorical_mask].values,
             'X_cat': df.loc[:, categorical_mask].values,
@@ -327,7 +340,13 @@ def adult():
     for k, v in _apply_split(trainval_data, train_val_idx).items():
         data[k].update(v)
 
-    _save(dataset_dir, 'Adult', TaskType.BINCLASS, **data)
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns,
+        "target": target_col
+    }
+
+    _save(dataset_dir, 'Adult', TaskType.BINCLASS, **data, cols=cols)
 
 
 def buddy():
@@ -366,14 +385,14 @@ def cardio():
         "ap_lo"
     ]
 
-    cat_columns = df.columns.difference(num_columns)
+    cat_columns = [c for c in df.columns if c not in num_columns]
     assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
     X_num_all = df[num_columns].astype(np.float64).values
     X_cat_all = df[cat_columns].astype(str).values
 
     cols = {
         "num": num_columns,
-        "cat": cat_columns.tolist(),
+        "cat": cat_columns,
         "target": target_col
     }
 
@@ -397,10 +416,11 @@ def churn2_modelling():
     # Get the file here: https://www.kaggle.com/shrutimechlearn/churn-modelling
     dataset_dir, files = _start('churn2')
     df = pd.read_csv(files[0])
+    target_col = "Exited"
 
     df = df.drop(columns=['RowNumber', 'CustomerId', 'Surname'])
     df['Gender'] = df['Gender'].astype('category').cat.codes.values.astype(np.int64)
-    y_all = df.pop('Exited').values.astype(np.int64)
+    y_all = df.pop(target_col).values.astype(np.int64)
 
     # Make dataset consistent with the data used in https://github.com/rotot0/tab-ddpm.
     # We move the variables ['Gender', 'HasCrCard', 'IsActiveMember'] to the cat_columns
@@ -423,6 +443,12 @@ def churn2_modelling():
     X_cat_all = df[cat_columns].astype(str).values
     idx = _make_split(len(df), y_all, 3)
 
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns,
+        "target": target_col
+    }
+
     _save(
         dataset_dir,
         'Churn Modelling',
@@ -432,6 +458,7 @@ def churn2_modelling():
             idx,
         ),
         idx=idx,
+        cols=cols
     )
 
 
@@ -466,14 +493,15 @@ def diabetes():
         "DiabetesPedigreeFunction",
         "Age"
     ]
-    cat_columns = df.columns.difference(num_columns)
+
+    cat_columns = [c for c in df.columns if c not in num_columns]
     assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
     X_num_all = df[num_columns].astype(np.float64).values
     X_cat_all = df[cat_columns].astype(str).values
 
     cols = {
         "num": num_columns,
-        "cat": cat_columns.tolist(),
+        "cat": cat_columns,
         "target": target_col
     }
 
@@ -522,6 +550,7 @@ def facebook_comments_volume(keep_derived: bool):
     dfs = {k: v[v['target'] <= max_target_value] for k, v in dfs.items()}
 
     cat_columns = ['c3']
+    # Using difference here is fine because the column names are alphabetical.
     num_columns = dfs['train'].columns.difference(cat_columns + ['target'])
 
     # Make dataset consistent with the data used in https://github.com/rotot0/tab-ddpm.
@@ -617,14 +646,14 @@ def insurance():
         "children",
     ]
 
-    cat_columns = df.columns.difference(num_columns)
+    cat_columns = [c for c in df.columns if c not in num_columns]
     assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
     X_num_all = df[num_columns].astype(np.float64).values
     X_cat_all = df[cat_columns].astype(str).values
 
     cols = {
         "num": num_columns,
-        "cat": cat_columns.tolist(),
+        "cat": cat_columns,
         "target": target_col
     }
 
