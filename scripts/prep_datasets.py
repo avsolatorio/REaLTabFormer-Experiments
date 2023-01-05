@@ -53,9 +53,9 @@ EXPECTED_FILES = {
     # 'miniboone': [],
     # 'wilt': [],
 }
-EXPECTED_FILES['fb-c'] = EXPECTED_FILES['wd-fb-comments'] = EXPECTED_FILES[
-    'fb-comments'
-]
+# EXPECTED_FILES['fb-c'] = EXPECTED_FILES['wd-fb-comments'] = EXPECTED_FILES[
+#     'fb-comments'
+# ]
 
 
 class TaskType(enum.Enum):
