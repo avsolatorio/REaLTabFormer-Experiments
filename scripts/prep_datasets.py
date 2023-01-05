@@ -35,17 +35,18 @@ CAT_MISSING_VALUE = '__nan__'
 
 EXPECTED_FILES = {
     'abalone': ['dataset_187_abalone.arff', 'abalone_idx.json'],
+    'adult': [],
+    'california': [],
     'cardio': ['cardio_train.csv', 'cardio_idx.json'],
-    'diabetes': ['dataset_37_diabetes.arff', 'diabetes_idx.json'],
-    'gesture': [],
-    'house': [],
-    'higgs-small': [],
     # Source: https://www.kaggle.com/shrutimechlearn/churn-modelling
     'churn2': ['Churn_Modelling.csv'],
+    'diabetes': ['dataset_37_diabetes.arff', 'diabetes_idx.json'],
     # Source: https://archive.ics.uci.edu/ml/machine-learning-databases/00363/Dataset.zip
     'fb-comments': ['Dataset.zip'],
-    'california': [],
-    'adult': [],
+    'gesture': [],
+    'higgs-small': [],
+    'house': [],
+    'insurance': ['insurance.csv', 'insurance_idx.json']
 }
 EXPECTED_FILES['fb-c'] = EXPECTED_FILES['wd-fb-comments'] = EXPECTED_FILES[
     'fb-comments'
@@ -598,8 +599,44 @@ def house_16h():
 
 
 def insurance():
-    pass
+    data_id = "insurance"
+    dataset_dir, files = _start(data_id)
+    target_col = "charges"
 
+    df = pd.read_csv(files[0])
+    y_all = df.pop(target_col).values.astype(np.float64)
+
+    num_columns = [
+        "age",
+        "bmi",
+        "children",
+    ]
+
+    cat_columns = df.columns.difference(num_columns)
+    assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
+    X_num_all = df[num_columns].astype(np.float64).values
+    X_cat_all = df[cat_columns].astype(str).values
+
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns.tolist(),
+        "target": target_col
+    }
+
+    idx = _load_idx(data_id, files[1])
+
+    _save(
+        dataset_dir,
+        'Insurance',
+        TaskType.REGRESSION,
+        **_apply_split(
+            {'X_num': X_num_all, 'X_cat': X_cat_all, 'y': y_all},
+            idx,
+        ),
+        idx=idx,
+        float_type=np.float64,
+        cols=cols,
+    )
 
 def king():
     pass
