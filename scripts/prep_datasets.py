@@ -12,6 +12,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Optional, cast
 from urllib.request import urlretrieve
+from urllib.error import URLError
 
 import catboost.datasets
 import numpy as np
@@ -19,6 +20,7 @@ import pandas as pd
 import pyarrow.csv
 import sklearn.datasets
 import sklearn.utils
+from scipy.io import arff
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from tqdm import tqdm
@@ -31,6 +33,7 @@ SEED = 0
 CAT_MISSING_VALUE = '__nan__'
 
 EXPECTED_FILES = {
+    'abalone': ['dataset_187_abalone.arff', 'abalone_idx.json'],
     'eye': [],
     'gas': [],
     'gesture': [],
@@ -168,6 +171,7 @@ def _save(
     idx: Optional[ArrayDict],
     id_: Optional[str] = None,
     id_suffix: str = '--default',
+    float_type: type = np.float32,
 ) -> None:
     if id_ is not None:
         assert id_suffix == '--default'
@@ -175,13 +179,13 @@ def _save(
         X_num is not None or X_cat is not None
     ), 'At least one type of features must be presented.'
     if X_num is not None:
-        X_num = {k: v.astype(np.float32) for k, v in X_num.items()}
+        X_num = {k: v.astype(float_type) for k, v in X_num.items()}
     if X_cat is not None:
         X_cat = {k: v.astype(str) for k, v in X_cat.items()}
     if idx is not None:
         idx = {k: v.astype(np.int64) for k, v in idx.items()}
     y = {
-        k: v.astype(np.float32 if task_type == TaskType.REGRESSION else np.int64)
+        k: v.astype(float_type if task_type == TaskType.REGRESSION else np.int64)
         for k, v in y.items()
     }
     if task_type != TaskType.REGRESSION:
@@ -211,7 +215,65 @@ def _save(
     print('Done\n')
 
 
+def _load_idx(data_id: str, idx_file: Path) -> ArrayDict:
+    # Load idx data derived by reverse-engineering the
+    # train-val-test split in the data dump below.
+    # # conda activate tddpm
+    # # cd $PROJECT_DIR
+    # # wget "https://www.dropbox.com/s/rpckvcs3vx7j605/data.tar?dl=0" -O data.tar
+    # # tar -xvf data.tar
+
+    assert data_id in ["abalone"]
+    return cast(ArrayDict, json.loads(Path(idx_file).read_text()))
+
 # %%
+def abalone():
+    # Get the file here: https://www.kaggle.com/shrutimechlearn/churn-modelling
+    dataset_dir, files = _start('abalone')
+
+    try:
+        bunch = _fetch_openml(183)
+        df = bunch["data"]
+        y_all = bunch["target"].values.astype(np.int64)
+    except URLError:
+        # In case SSL is blocked by the firewall, fallback to local
+        # copy of the file.
+        data = arff.loadarff(files[0])
+        df = pd.DataFrame(data[0])
+        y_all = df.pop('Class_number_of_rings').values.astype(np.int64)
+
+    # Make dataset consistent with the data used in https://github.com/rotot0/tab-ddpm.
+    # We move the variables ['Gender', 'HasCrCard', 'IsActiveMember'] to the cat_columns
+    # since the nunique == 2 for these variables.
+    num_columns = [
+        'Length',
+        'Diameter',
+        'Height',
+        'Whole_weight',
+        'Shucked_weight',
+        'Viscera_weight',
+        'Shell_weight',
+    ]
+    cat_columns = ['Sex']
+    assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
+    X_num_all = df[num_columns].astype(np.float64).values
+    X_cat_all = df[cat_columns].astype(str).values
+
+    idx = _load_idx('abalone', files[1])
+
+    _save(
+        dataset_dir,
+        'Abalone',
+        TaskType.REGRESSION,
+        **_apply_split(
+            {'X_num': X_num_all, 'X_cat': X_cat_all, 'y': y_all},
+            idx,
+        ),
+        idx=idx,
+        float_type=np.float64
+    )
+
+
 def eye_movements():
     dataset_dir, _ = _start('eye')
     bunch = _fetch_openml(1044)
@@ -570,6 +632,7 @@ def main(argv):
     # (adult, california, fb-comments, gesture, higgs-small, house)
 
     # OpenML
+    abalone()
     # eye_movements()
     gesture_phase()  # *
     house_16h()  # *
@@ -578,7 +641,7 @@ def main(argv):
     # Kaggle
     # santander_customer_transactions()
     # otto_group_products()
-    # churn_modelling()
+    churn_modelling()
 
     # UCI
     facebook_comments_volume(True)  # *
