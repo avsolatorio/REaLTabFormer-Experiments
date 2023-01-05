@@ -17,7 +17,6 @@ from urllib.error import URLError
 import catboost.datasets
 import numpy as np
 import pandas as pd
-import pyarrow.csv
 import sklearn.datasets
 import sklearn.utils
 from scipy.io import arff
@@ -28,37 +27,22 @@ from tqdm import tqdm
 ArrayDict = dict[str, np.ndarray]
 Info = dict[str, Any]
 
-DATA_DIR = Path.home() / 'repositories' / 'a' / 'data'
+DATA_DIR = Path(__file__).parent.parent / 'data' / 'repo'
 SEED = 0
 CAT_MISSING_VALUE = '__nan__'
 
 EXPECTED_FILES = {
     'abalone': ['dataset_187_abalone.arff', 'abalone_idx.json'],
-    'eye': [],
-    'gas': [],
     'gesture': [],
     'house': [],
     'higgs-small': [],
-    # Run `kaggle competitions download -c santander-customer-transaction-prediction`
-    'santander': ['santander-customer-transaction-prediction.zip'],
-    # Run `kaggle competitions download -c otto-group-product-classification-challenge`
-    'otto': ['otto-group-product-classification-challenge.zip'],
-    # Run `kaggle competitions download -c rossmann-store-sales`
-    'rossmann': ['rossmann-store-sales.zip'],
     # Source: https://www.kaggle.com/shrutimechlearn/churn-modelling
-    'churn': ['Churn_Modelling.csv'],
-    # Source: https://www.kaggle.com/neomatrix369/nyc-taxi-trip-duration-extended
-    'taxi': ['train_extended.csv.zip'],
+    'churn2': ['Churn_Modelling.csv'],
     # Source: https://archive.ics.uci.edu/ml/machine-learning-databases/00363/Dataset.zip
     'fb-comments': ['Dataset.zip'],
     'california': [],
-    'covtype': [],
     'adult': [],
-    # Source: https://www.dropbox.com/s/572rj8m5f9l2nz5/MSLR-WEB10K.zip?dl=1
-    # This is literally the official data, but reuploded to Dropbox.
-    'microsoft': ['MSLR-WEB10K.zip'],
 }
-EXPECTED_FILES['wd-taxi'] = EXPECTED_FILES['taxi']
 EXPECTED_FILES['fb-c'] = EXPECTED_FILES['wd-fb-comments'] = EXPECTED_FILES[
     'fb-comments'
 ]
@@ -74,19 +58,6 @@ class TaskType(enum.Enum):
 def _set_random_seeds():
     random.seed(SEED)
     np.random.seed(SEED)
-
-
-def _download_file(url: str, path: Path):
-    assert not path.exists()
-    try:
-        print(f'Downloading {url} ...', end='', flush=True)
-        urlretrieve(url, path)
-    except Exception:
-        if path.exists():
-            path.unlink()
-        raise
-    finally:
-        print()
 
 
 def _unzip(path: Path, members: Optional[list[str]] = None) -> None:
@@ -274,24 +245,6 @@ def abalone():
     )
 
 
-def eye_movements():
-    dataset_dir, _ = _start('eye')
-    bunch = _fetch_openml(1044)
-
-    X_num_all = bunch['data'].drop(columns=['lineNo']).values.astype(np.float32)
-    y_all = _encode_classification_target(bunch['target'].cat.codes.values)
-    idx = _make_split(len(X_num_all), y_all, 3)
-
-    _save(
-        dataset_dir,
-        'Eye Movements',
-        TaskType.MULTICLASS,
-        **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
-        X_cat=None,
-        idx=idx,
-    )
-
-
 def gesture_phase():
     dataset_dir, _ = _start('gesture')
     bunch = _fetch_openml(4538)
@@ -352,51 +305,9 @@ def higgs_small():
     )
 
 
-def santander_customer_transactions():
-    dataset_dir, files = _start('santander')
-    _unzip(files[0])
-
-    df = pd.read_csv(dataset_dir / 'train.csv')
-    df.drop(columns=['ID_code'], inplace=True)
-    y_all = _encode_classification_target(df.pop('target').values)  # type: ignore[code]
-    X_num_all = df.values.astype(np.float32)
-    idx = _make_split(len(X_num_all), y_all, 3)
-
-    _save(
-        dataset_dir,
-        'Santander Customer Transactions',
-        TaskType.BINCLASS,
-        **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
-        X_cat=None,
-        idx=idx,
-    )
-
-
-def otto_group_products():
-    dataset_dir, files = _start('otto')
-    _unzip(files[0])
-
-    df = pd.read_csv(dataset_dir / 'train.csv')
-    df.drop(columns=['id'], inplace=True)
-    y_all = _encode_classification_target(
-        df.pop('target').map(lambda x: int(x.split('_')[-1]) - 1).values  # type: ignore[code]
-    )
-    X_num_all = df.values.astype(np.float32)
-    idx = _make_split(len(X_num_all), y_all, 3)
-
-    _save(
-        dataset_dir,
-        'Otto Group Products',
-        TaskType.MULTICLASS,
-        **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
-        X_cat=None,
-        idx=idx,
-    )
-
-
-def churn_modelling():
+def churn2_modelling():
     # Get the file here: https://www.kaggle.com/shrutimechlearn/churn-modelling
-    dataset_dir, files = _start('churn')
+    dataset_dir, files = _start('churn2')
     df = pd.read_csv(files[0])
 
     df = df.drop(columns=['RowNumber', 'CustomerId', 'Surname'])
@@ -502,24 +413,6 @@ def california_housing():
     )
 
 
-def covtype():
-    dataset_dir, _ = _start('covtype')
-
-    X_num_all, y_all = _get_sklearn_dataset('covtype')
-    idx = _make_split(len(X_num_all), y_all, 3)
-    data = _apply_split({'X_num': X_num_all, 'y': y_all}, idx)
-    data['y'] = {k: v - 1 for k, v in data['y'].items()}
-
-    _save(
-        dataset_dir,
-        'Covertype',
-        TaskType.MULTICLASS,
-        **data,
-        X_cat=None,
-        idx=idx,
-    )
-
-
 def adult():
     dataset_dir, _ = _start('adult')
 
@@ -554,47 +447,6 @@ def adult():
         data[k].update(v)
 
     _save(dataset_dir, 'Adult', TaskType.BINCLASS, **data)
-
-
-def mslr_web10k():
-    dataset_dir, files = _start('microsoft')
-    _unzip(files[0], ['Fold1/test.txt', 'Fold1/train.txt', 'Fold1/vali.txt'])
-    fold1_dir = dataset_dir / 'Fold1'
-
-    def parse_file(path):
-        with open(path) as f:
-            rows = []
-            for line in f:
-                line = line.split()
-                rows.append(
-                    np.fromiter(
-                        (float(item.split(':', 1)[-1]) for item in line),
-                        np.float32,
-                        len(line),
-                    )
-                )
-            rows = np.array(rows)
-        return rows[:, 2:], rows[:, 0], rows[:, 1].astype(np.int64)
-
-    X_num = {}
-    y = {}
-    groups = {}
-    for part in ['train', 'val', 'test']:
-        print(f'Parsing {part}...')
-        filename = f"{'vali' if part == 'val' else part}.txt"
-        X_num[part], y[part], groups[part] = parse_file(fold1_dir / filename)
-    shutil.rmtree(fold1_dir)
-    for k, v in groups.items():
-        np.save(dataset_dir / f'groups_{k}.npy', v)
-    _save(
-        dataset_dir,
-        'MSLR-WEB10K (Fold 1)',
-        TaskType.REGRESSION,
-        X_num=X_num,
-        X_cat=None,
-        y=y,
-        idx=None,
-    )
 
 
 # %%
@@ -633,26 +485,19 @@ def main(argv):
 
     # OpenML
     abalone()
-    # eye_movements()
     gesture_phase()  # *
     house_16h()  # *
     higgs_small()  # *
 
     # Kaggle
-    # santander_customer_transactions()
-    # otto_group_products()
-    churn_modelling()
+    churn2_modelling()
 
     # UCI
     facebook_comments_volume(True)  # *
 
     # Python packages
     california_housing()  # Scikit-Learn *
-    # covtype()  # Scikit-Learn
     adult()  # CatBoost *
-
-    # Other
-    # mslr_web10k()
 
     print('-----')
     print('Done!')
