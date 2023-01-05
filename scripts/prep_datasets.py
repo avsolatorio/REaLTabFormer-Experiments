@@ -245,35 +245,55 @@ def abalone():
     )
 
 
-def gesture_phase():
-    dataset_dir, _ = _start('gesture')
-    bunch = _fetch_openml(4538)
+def adult():
+    dataset_dir, _ = _start('adult')
 
-    X_num_all = bunch['data'].values.astype(np.float32)
-    y_all = _encode_classification_target(bunch['target'].cat.codes.values)
-    idx = _make_split(len(X_num_all), y_all, 3)
+    df_trainval, df_test = catboost.datasets.adult()
+    df_trainval = cast(pd.DataFrame, df_trainval)
+    df_test = cast(pd.DataFrame, df_test)
+    assert (df_trainval.dtypes == df_test.dtypes).all()
+    assert (df_trainval.columns == df_test.columns).all()
+    categorical_mask = cast(pd.Series, df_trainval.dtypes != np.float64)
 
-    _save(
-        dataset_dir,
-        'Gesture Phase',
-        TaskType.MULTICLASS,
-        **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
-        X_cat=None,
-        idx=idx,
-    )
+    def get_Xy(df: pd.DataFrame):
+        y = (df.pop('income') == '>50K').values.astype('int64')
+        return {
+            'X_num': df.loc[:, ~categorical_mask].values,
+            'X_cat': df.loc[:, categorical_mask].values,
+            'y': y,
+        }
+
+    data = {k: {'test': v} for k, v in get_Xy(df_test).items()} | {
+        'idx': {
+            'test': np.arange(
+                len(df_trainval), len(df_trainval) + len(df_test), dtype=np.int64
+            )
+        }
+    }
+    trainval_data = get_Xy(df_trainval)
+    train_val_idx = _make_split(len(df_trainval), trainval_data['y'], 2)
+    data['idx'].update(train_val_idx)
+    for x in data['X_cat'].values():
+        x[x == 'nan'] = CAT_MISSING_VALUE
+    for k, v in _apply_split(trainval_data, train_val_idx).items():
+        data[k].update(v)
+
+    _save(dataset_dir, 'Adult', TaskType.BINCLASS, **data)
 
 
-def house_16h():
-    dataset_dir, _ = _start('house')
-    bunch = _fetch_openml(574)
+def buddy():
+    pass
 
-    X_num_all = bunch['data'].values.astype(np.float32)
-    y_all = bunch['target'].values.astype(np.float32)
+
+def california_housing():
+    dataset_dir, _ = _start('california')
+
+    X_num_all, y_all = _get_sklearn_dataset('california_housing')
     idx = _make_split(len(X_num_all), None, 3)
 
     _save(
         dataset_dir,
-        'House 16H',
+        'California Housing',
         TaskType.REGRESSION,
         **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
         X_cat=None,
@@ -281,28 +301,8 @@ def house_16h():
     )
 
 
-def higgs_small():
-    dataset_dir, _ = _start('higgs-small')
-    bunch = _fetch_openml(23512)
-
-    X_num_all = bunch['data'].values.astype(np.float32)
-    y_all = _encode_classification_target(bunch['target'].cat.codes.values)
-    nan_mask = np.isnan(X_num_all)
-    valid_objects_mask = ~(nan_mask.any(1))
-    # There is just one object with nine(!) missing values; let's drop it
-    assert valid_objects_mask.sum() + 1 == len(X_num_all) and nan_mask.sum() == 9
-    X_num_all = X_num_all[valid_objects_mask]
-    y_all = y_all[valid_objects_mask]
-    idx = _make_split(len(X_num_all), y_all, 3)
-
-    _save(
-        dataset_dir,
-        'Higgs Small',
-        TaskType.BINCLASS,
-        **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
-        X_cat=None,
-        idx=idx,
-    )
+def cardio():
+    pass
 
 
 def churn2_modelling():
@@ -345,6 +345,14 @@ def churn2_modelling():
         ),
         idx=idx,
     )
+
+
+def default():
+    pass
+
+
+def diabetes():
+    pass
 
 
 def facebook_comments_volume(keep_derived: bool):
@@ -397,15 +405,59 @@ def facebook_comments_volume(keep_derived: bool):
     )
 
 
-def california_housing():
-    dataset_dir, _ = _start('california')
+def gesture_phase():
+    dataset_dir, _ = _start('gesture')
+    bunch = _fetch_openml(4538)
 
-    X_num_all, y_all = _get_sklearn_dataset('california_housing')
+    X_num_all = bunch['data'].values.astype(np.float32)
+    y_all = _encode_classification_target(bunch['target'].cat.codes.values)
+    idx = _make_split(len(X_num_all), y_all, 3)
+
+    _save(
+        dataset_dir,
+        'Gesture Phase',
+        TaskType.MULTICLASS,
+        **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
+        X_cat=None,
+        idx=idx,
+    )
+
+
+def higgs_small():
+    dataset_dir, _ = _start('higgs-small')
+    bunch = _fetch_openml(23512)
+
+    X_num_all = bunch['data'].values.astype(np.float32)
+    y_all = _encode_classification_target(bunch['target'].cat.codes.values)
+    nan_mask = np.isnan(X_num_all)
+    valid_objects_mask = ~(nan_mask.any(1))
+    # There is just one object with nine(!) missing values; let's drop it
+    assert valid_objects_mask.sum() + 1 == len(X_num_all) and nan_mask.sum() == 9
+    X_num_all = X_num_all[valid_objects_mask]
+    y_all = y_all[valid_objects_mask]
+    idx = _make_split(len(X_num_all), y_all, 3)
+
+    _save(
+        dataset_dir,
+        'Higgs Small',
+        TaskType.BINCLASS,
+        **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
+        X_cat=None,
+        idx=idx,
+    )
+
+
+def house_16h():
+    dataset_dir, _ = _start('house')
+    bunch = _fetch_openml(574)
+
+    X_num_all = bunch['data'].values.astype(np.float32)
+    y_all = bunch['target'].values.astype(np.float32)
     idx = _make_split(len(X_num_all), None, 3)
 
     _save(
         dataset_dir,
-        'California Housing',
+        'House 16H',
         TaskType.REGRESSION,
         **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
         X_cat=None,
@@ -413,40 +465,20 @@ def california_housing():
     )
 
 
-def adult():
-    dataset_dir, _ = _start('adult')
+def insurance():
+    pass
 
-    df_trainval, df_test = catboost.datasets.adult()
-    df_trainval = cast(pd.DataFrame, df_trainval)
-    df_test = cast(pd.DataFrame, df_test)
-    assert (df_trainval.dtypes == df_test.dtypes).all()
-    assert (df_trainval.columns == df_test.columns).all()
-    categorical_mask = cast(pd.Series, df_trainval.dtypes != np.float64)
 
-    def get_Xy(df: pd.DataFrame):
-        y = (df.pop('income') == '>50K').values.astype('int64')
-        return {
-            'X_num': df.loc[:, ~categorical_mask].values,
-            'X_cat': df.loc[:, categorical_mask].values,
-            'y': y,
-        }
+def king():
+    pass
 
-    data = {k: {'test': v} for k, v in get_Xy(df_test).items()} | {
-        'idx': {
-            'test': np.arange(
-                len(df_trainval), len(df_trainval) + len(df_test), dtype=np.int64
-            )
-        }
-    }
-    trainval_data = get_Xy(df_trainval)
-    train_val_idx = _make_split(len(df_trainval), trainval_data['y'], 2)
-    data['idx'].update(train_val_idx)
-    for x in data['X_cat'].values():
-        x[x == 'nan'] = CAT_MISSING_VALUE
-    for k, v in _apply_split(trainval_data, train_val_idx).items():
-        data[k].update(v)
 
-    _save(dataset_dir, 'Adult', TaskType.BINCLASS, **data)
+def miniboone():
+    pass
+
+
+def wilt():
+    pass
 
 
 # %%
