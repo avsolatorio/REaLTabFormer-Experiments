@@ -591,6 +591,16 @@ def facebook_comments_volume(keep_derived: bool):
 def gesture_phase():
     dataset_dir, _ = _start('gesture')
     bunch = _fetch_openml(4538)
+    target_col = "target"
+
+    num_columns = bunch['data'].columns.tolist()
+    cat_columns = []
+
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns,
+        "target": target_col
+    }
 
     X_num_all = bunch['data'].values.astype(np.float32)
     y_all = _encode_classification_target(bunch['target'].cat.codes.values)
@@ -603,6 +613,7 @@ def gesture_phase():
         **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
         X_cat=None,
         idx=idx,
+        cols=cols
     )
 
 
