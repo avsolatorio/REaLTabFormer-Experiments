@@ -10,11 +10,12 @@ import sys
 import zipfile
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Optional, cast
+from typing import Any, Optional, cast, List, Tuple, Dict, Union
 from urllib.request import urlretrieve
 from urllib.error import URLError
 
 import catboost.datasets
+import joblib
 import numpy as np
 import pandas as pd
 import sklearn.datasets
@@ -24,8 +25,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from tqdm import tqdm
 
-ArrayDict = dict[str, np.ndarray]
-Info = dict[str, Any]
+ArrayDict = Dict[str, np.ndarray]
+ListDict = Dict[str, Union[list, str]]
+Info = Dict[str, Any]
 
 DATA_DIR = Path(__file__).parent.parent / 'data' / 'repo'
 SEED = 0
@@ -33,6 +35,7 @@ CAT_MISSING_VALUE = '__nan__'
 
 EXPECTED_FILES = {
     'abalone': ['dataset_187_abalone.arff', 'abalone_idx.json'],
+    'diabetes': ['dataset_37_diabetes.arff', 'diabetes_idx.json'],
     'gesture': [],
     'house': [],
     'higgs-small': [],
@@ -60,12 +63,12 @@ def _set_random_seeds():
     np.random.seed(SEED)
 
 
-def _unzip(path: Path, members: Optional[list[str]] = None) -> None:
+def _unzip(path: Path, members: Optional[List[str]] = None) -> None:
     with zipfile.ZipFile(path) as f:
         f.extractall(path.parent, members)
 
 
-def _start(dirname: str) -> tuple[Path, list[Path]]:
+def _start(dirname: str) -> Tuple[Path, List[Path]]:
     print(f'>>> {dirname}')
     _set_random_seeds()
     dataset_dir = DATA_DIR / dirname
@@ -88,7 +91,7 @@ def _fetch_openml(data_id: int) -> sklearn.utils.Bunch:
     return bunch
 
 
-def _get_sklearn_dataset(name: str) -> tuple[np.ndarray, np.ndarray]:
+def _get_sklearn_dataset(name: str) -> Tuple[np.ndarray, np.ndarray]:
     get_data = getattr(sklearn.datasets, f'load_{name}', None)
     if get_data is None:
         get_data = getattr(sklearn.datasets, f'fetch_{name}', None)
@@ -127,7 +130,7 @@ def _make_split(size: int, stratify: Optional[np.ndarray], n_parts: int) -> Arra
     return cast(ArrayDict, {'train': a1_idx, 'val': a2_idx, 'test': b_idx})
 
 
-def _apply_split(data: ArrayDict, split: ArrayDict) -> dict[str, ArrayDict]:
+def _apply_split(data: ArrayDict, split: ArrayDict) -> Dict[str, ArrayDict]:
     return {k: {part: v[idx] for part, idx in split.items()} for k, v in data.items()}
 
 
@@ -143,6 +146,7 @@ def _save(
     id_: Optional[str] = None,
     id_suffix: str = '--default',
     float_type: type = np.float32,
+    cols: Optional[ListDict] = None,
 ) -> None:
     if id_ is not None:
         assert id_suffix == '--default'
@@ -172,6 +176,7 @@ def _save(
         'task_type': task_type.value,
         'n_num_features': (0 if X_num is None else next(iter(X_num.values())).shape[1]),
         'n_cat_features': (0 if X_cat is None else next(iter(X_cat.values())).shape[1]),
+        'cols': cols
     } | {f'{k}_size': len(v) for k, v in y.items()}
     if task_type == TaskType.MULTICLASS:
         info['n_classes'] = len(set(y['train']))
@@ -182,6 +187,42 @@ def _save(
         if data is not None:
             for k, v in data.items():
                 np.save(dataset_dir / f'{data_name}_{k}.npy', v)
+
+    if cols:
+        for dpart in ["train", "val", "test"]:
+            target = locals()["y"]
+
+            if dpart not in target:
+                continue
+
+            cat = locals()["X_cat"]
+            num = locals()["X_num"]
+            part_idx = locals()["idx"]
+
+            data = []
+
+            # Here we put the categorical variables first.
+            # In the ddpm data, the numerical variables come first.
+            if cat is not None and dpart in cat:
+                cat = cat[dpart]
+                data.append(pd.DataFrame(cat, columns=cols["cat"]))
+
+            if num is not None and dpart in num:
+                num = num[dpart]
+                data.append(pd.DataFrame(num, columns=cols["num"]))
+
+            if len(data) > 1:
+                data = pd.concat(data, axis=1)
+            else:
+                data = data[0]
+
+            data[cols["target"]] = target
+
+            if part_idx:
+                data.index = part_idx
+
+            joblib.dump(data, dataset_dir / f'full_{dpart}.df.pkl')
+
     (dataset_dir / 'READY').touch()
     print('Done\n')
 
@@ -201,6 +242,7 @@ def _load_idx(data_id: str, idx_file: Path) -> ArrayDict:
 def abalone():
     # Get the file here: https://www.kaggle.com/shrutimechlearn/churn-modelling
     dataset_dir, files = _start('abalone')
+    target_col = "Class_number_of_rings"
 
     try:
         bunch = _fetch_openml(183)
@@ -211,7 +253,7 @@ def abalone():
         # copy of the file.
         data = arff.loadarff(files[0])
         df = pd.DataFrame(data[0])
-        y_all = df.pop('Class_number_of_rings').values.astype(np.int64)
+        y_all = df.pop(target_col).values.astype(np.int64)
 
     # Make dataset consistent with the data used in https://github.com/rotot0/tab-ddpm.
     # We move the variables ['Gender', 'HasCrCard', 'IsActiveMember'] to the cat_columns
@@ -352,7 +394,57 @@ def default():
 
 
 def diabetes():
-    pass
+    # Get the file here: https://www.kaggle.com/shrutimechlearn/churn-modelling
+    data_id = "diabetes"
+    dataset_dir, files = _start(data_id)
+    target_col = "Outcome"
+
+    try:
+        bunch = _fetch_openml(42608)
+        df = bunch["data"]
+    except URLError:
+        # In case SSL is blocked by the firewall, fallback to local
+        # copy of the file.
+        data = arff.loadarff(files[0])
+        df = pd.DataFrame(data[0])
+
+    y_all = df.pop(target_col).values.astype(np.int64)
+
+    num_columns = [
+        "Pregnancies",
+        "Glucose",
+        "BloodPressure",
+        "SkinThickness",
+        "Insulin",
+        "BMI",
+        "DiabetesPedigreeFunction",
+        "Age"
+    ]
+    cat_columns = df.columns.difference(num_columns)
+    assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
+    X_num_all = df[num_columns].astype(np.float64).values
+    X_cat_all = df[cat_columns].astype(str).values
+
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns.tolist(),
+        "target": target_col
+    }
+
+    idx = _load_idx(data_id, files[1])
+
+    _save(
+        dataset_dir,
+        'Diabetes',
+        TaskType.BINCLASS,
+        **_apply_split(
+            {'X_num': X_num_all, 'X_cat': X_cat_all, 'y': y_all},
+            idx,
+        ),
+        idx=idx,
+        float_type=np.float64,
+        cols=cols,
+    )
 
 
 def facebook_comments_volume(keep_derived: bool):
