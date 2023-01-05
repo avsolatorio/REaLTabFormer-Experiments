@@ -7,6 +7,9 @@ name = "pypi"
 joblib = "*"
 scikit-learn = "*"
 pandas = "*"
+catboost = "*"
+numpy = "<1.24"
+tqdm = "*"
 
 [dev-packages]
 ipython = "*"
