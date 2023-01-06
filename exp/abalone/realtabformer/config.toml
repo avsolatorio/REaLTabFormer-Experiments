@@ -6,6 +6,8 @@ device = "cuda"
 [model_params.meta]
 target_batch_size = 512
 frac_max_data = 5000
+checkpoints_dir = "rtf_checkpoints"
+samples_save_dir = "rtf_samples"
 
 [model_params.train]
 model_type = "tabular"

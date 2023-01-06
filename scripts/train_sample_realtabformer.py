@@ -29,8 +29,20 @@ def train_realtabformer(
     train_params[f"{train_params['model_type']}_config"] = GPT2Config(
         **train_params.pop("gpt_config"))
 
+    dir_params = {
+        "checkpoints_dir": parent_dir / model_params["meta"]["checkpoints_dir"],
+        "samples_save_dir": parent_dir / model_params["meta"]["samples_save_dir"],
+    }
+
     # Set up the model
-    rtf_model = REaLTabFormer(**train_params, **training_args_kwargs)
+    rtf_model = REaLTabFormer(**train_params, **dir_params, **training_args_kwargs)
+
+    if Path("/content").exists():
+        print("In colab....")
+        # We are in colab???
+        rtf_model.training_args_kwargs["output_dir"] = (Path("/content") / f"{dir_params['checkpoints_dir'].name}-{real_data_path.name}").as_posix()
+    else:
+        rtf_model.training_args_kwargs["output_dir"] = dir_params["checkpoints_dir"].as_posix()
 
     train_data = joblib.load(real_data_path / "full_train.df.pkl")
     fit_params = model_params["fit"]
