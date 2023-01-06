@@ -319,7 +319,7 @@ def adult():
     num_columns = categorical_mask[~categorical_mask].index.tolist()
     cat_columns = [c for c in df_trainval.columns if c not in num_columns]
     if target_col in cat_columns:
-        cat_columns.pop(target_col)
+        cat_columns.pop(cat_columns.index(target_col))
 
     def get_Xy(df: pd.DataFrame):
         y = (df.pop(target_col) == '>50K').values.astype('int64')
