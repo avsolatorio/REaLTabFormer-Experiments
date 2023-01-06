@@ -14,7 +14,7 @@ model_type = "tabular"
 batch_size = 128
 epochs = 200
 train_size = 1
-random_state = 0
+random_state = 1029
 early_stopping_patience = 0
 
 [model_params.train.gpt_config]
