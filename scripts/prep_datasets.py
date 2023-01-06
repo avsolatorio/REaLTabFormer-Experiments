@@ -51,7 +51,7 @@ EXPECTED_FILES = {
     'insurance': ['insurance.csv', 'insurance_idx.json'],
     # 'king': ['kc_house_data.csv', 'king_idx.json'],
     'miniboone': ['miniboone_idx.json'],
-    # 'wilt': [],
+    'wilt': ['wilt_idx.json'],
 }
 # EXPECTED_FILES['fb-c'] = EXPECTED_FILES['wd-fb-comments'] = EXPECTED_FILES[
 #     'fb-comments'
@@ -819,7 +819,44 @@ def miniboone():
     )
 
 def wilt():
-    pass
+    data_id = "wilt"
+    dataset_dir, files = _start(data_id)
+    bunch = _fetch_openml(40983)
+
+    target_col = "target"
+
+    df = bunch["data"].copy()
+    y_all = bunch["target"].cat.codes.values.astype(np.int64)
+
+    num_columns = df.columns.tolist()
+    cat_columns = [c for c in df.columns if c not in num_columns]
+
+    # There should be no categorical cols
+    assert len(cat_columns) == 0
+
+    assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
+    X_num_all = df[num_columns].astype(np.float64).values
+
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns,
+        "target": target_col
+    }
+
+    idx = _load_idx(data_id, files[0])
+
+    _save(
+        dataset_dir,
+        'wilt',
+        TaskType.BINCLASS,
+        **_apply_split(
+            {'X_num': X_num_all, 'y': y_all},
+            idx,
+        ),
+        idx=idx,
+        float_type=np.float64,
+        cols=cols,
+    )
 
 
 # %%
