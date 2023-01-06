@@ -10,8 +10,8 @@ pandas = "*"
 catboost = "*"
 numpy = "<1.24"
 tqdm = "*"
-zero = "*"
 tomli = "*"
+libzero = "*"
 
 [dev-packages]
 ipython = "*"
