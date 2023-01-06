@@ -399,6 +399,7 @@ def buddy():
             idx,
         ),
         idx=idx,
+        float_type=np.float64,
         cols=cols
     )
     pass
