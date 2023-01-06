@@ -411,6 +411,12 @@ def california_housing():
     X_num_all, y_all = _get_sklearn_dataset('california_housing')
     idx = _make_split(len(X_num_all), None, 3)
 
+    cols = {
+        "num": X_num_all.columns.tolist(),
+        "cat": [],
+        "target": "MedHouseVal"
+    }
+
     _save(
         dataset_dir,
         'California Housing',
@@ -418,6 +424,7 @@ def california_housing():
         **_apply_split({'X_num': X_num_all, 'y': y_all}, idx),
         X_cat=None,
         idx=idx,
+        cols=cols
     )
 
 
