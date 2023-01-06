@@ -909,7 +909,7 @@ def main(argv):
     insurance()
     # king()
     miniboone()
-    # wilt()
+    wilt()
 
     print('-----')
     print('Done!')
