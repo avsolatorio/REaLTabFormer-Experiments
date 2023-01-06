@@ -49,8 +49,8 @@ EXPECTED_FILES = {
     'higgs-small': [],
     'house': [],
     'insurance': ['insurance.csv', 'insurance_idx.json'],
-    # 'king': [],
-    # 'miniboone': [],
+    # 'king': ['kc_house_data.csv', 'king_idx.json'],
+    'miniboone': ['miniboone_idx.json'],
     # 'wilt': [],
 }
 # EXPECTED_FILES['fb-c'] = EXPECTED_FILES['wd-fb-comments'] = EXPECTED_FILES[
@@ -779,8 +779,44 @@ def king():
 
 
 def miniboone():
-    pass
+    data_id = "miniboone"
+    dataset_dir, files = _start(data_id)
+    bunch = _fetch_openml(41150)
 
+    target_col = "target"
+
+    df = bunch["data"].copy()
+    y_all = bunch["target"].cat.codes.values.astype(np.int64)
+
+    num_columns = df.columns.tolist()
+    cat_columns = [c for c in df.columns if c not in num_columns]
+
+    # There should be no categorical cols
+    assert len(cat_columns) == 0
+
+    assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
+    X_num_all = df[num_columns].astype(np.float64).values
+
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns,
+        "target": target_col
+    }
+
+    idx = _load_idx(data_id, files[0])
+
+    _save(
+        dataset_dir,
+        'MiniBooNE',
+        TaskType.BINCLASS,
+        **_apply_split(
+            {'X_num': X_num_all, 'y': y_all},
+            idx,
+        ),
+        idx=idx,
+        float_type=np.float64,
+        cols=cols,
+    )
 
 def wilt():
     pass
@@ -835,7 +871,7 @@ def main(argv):
     house_16h()
     insurance()
     # king()
-    # miniboone()
+    miniboone()
     # wilt()
 
     print('-----')
