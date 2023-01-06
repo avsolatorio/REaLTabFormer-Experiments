@@ -505,6 +505,9 @@ def churn2_modelling():
     X_cat_all = df[cat_columns].astype(str).values
     idx = _make_split(len(df), y_all, 3)
 
+    assert num_columns[-2:] == ["EstimatedSalary", "EstimatedSalary"]
+    num_columns[-1] = "EstimatedSalaryDup"
+
     cols = {
         "num": num_columns,
         "cat": cat_columns,
