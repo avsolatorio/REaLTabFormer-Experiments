@@ -35,7 +35,7 @@ CAT_MISSING_VALUE = '__nan__'
 
 EXPECTED_FILES = {
     'abalone': ['dataset_187_abalone.arff', 'abalone_idx.json'],
-    # 'adult': [],
+    'adult': [],
     'buddy': ['train.csv', 'buddy_idx.json'],
     'california': [],
     'cardio': ['cardio_train.csv', 'cardio_idx.json'],
@@ -883,10 +883,17 @@ def main(argv):
         action='store_true',
         help='Remove everything except for the expected files.',
     )
+    parser.add_argument(
+        '--skip-adult',
+        action='store_true',
+        help='Skip adult data.',
+    )
     args = parser.parse_args(argv[1:])
 
     if args.clear:
         for dirname, filenames in EXPECTED_FILES.items():
+            if args.skip_adult and dirname == "adult":
+                continue
             dataset_dir = DATA_DIR / dirname
             for x in dataset_dir.iterdir():
                 if x.name not in filenames:
@@ -908,7 +915,8 @@ def main(argv):
 
     # OpenML
     abalone()
-    # adult()  # CatBoost *
+    if not args.skip_adult:
+        adult()  # CatBoost *
     buddy()
     california_housing()  # Scikit-Learn *
     cardio()
