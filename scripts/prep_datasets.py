@@ -380,7 +380,7 @@ def buddy():
         "pet_category"
     ]
     assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
-    X_num_all = df[num_columns].astype(np.float32).values
+    X_num_all = df[num_columns].astype(np.float64).values
     X_cat_all = df[cat_columns].astype(str).values
     idx = _load_idx(data_id, files[1])
 
