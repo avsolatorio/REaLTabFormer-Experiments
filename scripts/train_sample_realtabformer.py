@@ -1,7 +1,7 @@
 import joblib
 import torch
 from pathlib import Path
-from realtabformer import REaLTabFormer
+from realtabformer import REaLTabFormer, data_utils
 from transformers import GPT2Config
 
 
@@ -26,9 +26,8 @@ def train_realtabformer(
         cuda_count //
         train_params["batch_size"])
 
-    # Update the gpt_config
-    train_params["gpt_config"] = GPT2Config(
-        **train_params["gpt_config"])
+    train_params[f"{train_params['model_type']}_config"] = GPT2Config(
+        **train_params.pop("gpt_config"))
 
     # Set up the model
     rtf_model = REaLTabFormer(**train_params, **training_args_kwargs)
