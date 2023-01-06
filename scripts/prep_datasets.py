@@ -36,7 +36,7 @@ CAT_MISSING_VALUE = '__nan__'
 EXPECTED_FILES = {
     'abalone': ['dataset_187_abalone.arff', 'abalone_idx.json'],
     # 'adult': [],
-    # 'buddy': [],
+    'buddy': ['train.csv', 'buddy_idx.json'],
     'california': [],
     'cardio': ['cardio_train.csv', 'cardio_idx.json'],
     # Source: https://www.kaggle.com/shrutimechlearn/churn-modelling
@@ -354,6 +354,53 @@ def adult():
 
 
 def buddy():
+    data_id = "buddy"
+    dataset_dir, files = _start(data_id)
+    df = pd.read_csv(files[0])
+    df.drop("pet_id", axis=1, inplace=True)
+    target_col = "breed_category"
+
+    # Convert datetime to int
+    df["issue_date"] = pd.to_datetime(df["issue_date"]).astype(int) / 10**9
+    df["listing_date"] = pd.to_datetime(df["listing_date"]).astype(int) / 10**9
+
+    y_all = df.pop(target_col).values.astype(np.int64)
+
+    num_columns = [
+        "issue_date",
+        "listing_date",
+        "length(m)",
+        "height(cm)"
+    ]
+    cat_columns = [
+        "condition",
+        "color_type",
+        "X1",
+        "X2",
+        "pet_category"
+    ]
+    assert set(num_columns) | set(cat_columns) == set(df.columns.tolist())
+    X_num_all = df[num_columns].astype(np.float32).values
+    X_cat_all = df[cat_columns].astype(str).values
+    idx = _load_idx(data_id, files[1])
+
+    cols = {
+        "num": num_columns,
+        "cat": cat_columns,
+        "target": target_col
+    }
+
+    _save(
+        dataset_dir,
+        'Buddy',
+        TaskType.MULTICLASS,
+        **_apply_split(
+            {'X_num': X_num_all, 'X_cat': X_cat_all, 'y': y_all},
+            idx,
+        ),
+        idx=idx,
+        cols=cols
+    )
     pass
 
 
@@ -776,7 +823,7 @@ def main(argv):
     # OpenML
     abalone()
     # adult()  # CatBoost *
-    # buddy()
+    buddy()
     california_housing()  # Scikit-Learn *
     cardio()
     churn2_modelling()
