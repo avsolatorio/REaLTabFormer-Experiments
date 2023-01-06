@@ -1,3 +1,4 @@
+import json
 import joblib
 import torch
 from pathlib import Path
@@ -13,6 +14,9 @@ def train_realtabformer(
 ):
     real_data_path = Path(real_data_path)
     parent_dir = Path(parent_dir)
+
+    data_info = json.loads((real_data_path / "info.json").read_text())
+    sample_gen_size = data_info.get("train_size", 0) + data_info.get("val_size", 0) + data_info.get("test_size", 0)
 
     cuda_count = max(1, torch.cuda.device_count())
     train_params = model_params["train"]
@@ -67,7 +71,10 @@ def train_realtabformer(
 
     rtf_model.save(path=parent_dir / "trained_model")
 
-    return rtf_model
+    rtf_model.sample(
+        n_samples=sample_gen_size, gen_batch=128, device=fit_params["device"],
+        save_samples=True
+    )
 
 
 def sample_realtabformer():
