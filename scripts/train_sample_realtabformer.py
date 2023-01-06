@@ -2,7 +2,8 @@ import json
 import joblib
 import torch
 from pathlib import Path
-from realtabformer import REaLTabFormer, data_utils
+import realtabformer
+from realtabformer import REaLTabFormer
 from transformers import GPT2Config
 
 
@@ -12,6 +13,10 @@ def train_realtabformer(
     model_params,
     device = "cpu"
 ):
+    # Make sure that the rtf model specified in the config
+    # is similar to the one installed in the environment.
+    assert model_params["version"] == realtabformer.__version__
+
     real_data_path = Path(real_data_path)
     parent_dir = Path(parent_dir)
 

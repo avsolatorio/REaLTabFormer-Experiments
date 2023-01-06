@@ -3,6 +3,9 @@ real_data_path = "data/repo/fb-comments/"
 seed = 0
 device = "cuda"
 
+[model_params]
+version = "0.0.2.3.0"
+
 [model_params.meta]
 target_batch_size = 512
 frac_max_data = 5000
@@ -36,7 +39,9 @@ num_bootstrap = 500
 sensitivity_max_col_nums = 5
 use_ks = false
 full_sensitivity = false
-frac = 0.2
+frac = 0.15
+sensitivity_orig_frac_multiple = 4
+orig_samples_rounds = 5
 
 
 [model_params.sample]
