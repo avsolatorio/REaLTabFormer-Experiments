@@ -242,7 +242,7 @@ def _load_idx(data_id: str, idx_file: Path) -> ArrayDict:
     # # wget "https://www.dropbox.com/s/rpckvcs3vx7j605/data.tar?dl=0" -O data.tar
     # # tar -xvf data.tar
 
-    assert data_id in ["abalone", "cardio", "diabetes", "insurance"]
+    # assert data_id in ["abalone", "cardio", "diabetes", "insurance"]
     idx = json.loads(Path(idx_file).read_text())
     idx = {k: np.array(v) for k, v in idx.items()}
 
