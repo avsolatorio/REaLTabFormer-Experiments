@@ -98,12 +98,12 @@ def _fetch_openml(data_id: int) -> sklearn.utils.Bunch:
     return bunch
 
 
-def _get_sklearn_dataset(name: str) -> Tuple[np.ndarray, np.ndarray]:
+def _get_sklearn_dataset(name: str, return_X_y: bool = True) -> Tuple[np.ndarray, np.ndarray]:
     get_data = getattr(sklearn.datasets, f'load_{name}', None)
     if get_data is None:
         get_data = getattr(sklearn.datasets, f'fetch_{name}', None)
     assert get_data is not None, f'No such dataset in scikit-learn: {name}'
-    return get_data(return_X_y=True)
+    return get_data(return_X_y=return_X_y)
 
 
 def _encode_classification_target(y: np.ndarray) -> np.ndarray:
@@ -408,13 +408,16 @@ def buddy():
 def california_housing():
     dataset_dir, _ = _start('california')
 
-    X_num_all, y_all = _get_sklearn_dataset('california_housing')
+    data = _get_sklearn_dataset('california_housing', return_X_y=False)
+    X_num_all = data["data"]
+    y_all = data["target"]
+
     idx = _make_split(len(X_num_all), None, 3)
 
     cols = {
-        "num": X_num_all.columns.tolist(),
+        "num": data["feature_names"],
         "cat": [],
-        "target": "MedHouseVal"
+        "target": data["target_names"][0]
     }
 
     _save(
