@@ -39,8 +39,8 @@ num_bootstrap = 500
 sensitivity_max_col_nums = 5
 use_ks = false
 full_sensitivity = false
-frac = 0.15
-sensitivity_orig_frac_multiple = 4
+frac = 0.2
+sensitivity_orig_frac_multiple = 3
 orig_samples_rounds = 5
 
 
