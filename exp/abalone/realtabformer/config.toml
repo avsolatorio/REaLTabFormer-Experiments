@@ -4,7 +4,7 @@ seed = 0
 device = "cuda"
 
 [model_params]
-version = "0.0.2.3.0"
+version = "0.0.2.3.2"
 
 [model_params.meta]
 target_batch_size = 512
@@ -14,7 +14,7 @@ samples_save_dir = "rtf_samples"
 
 [model_params.train]
 model_type = "tabular"
-batch_size = 128
+batch_size = 256
 epochs = 200
 train_size = 1
 random_state = 1029
@@ -22,10 +22,12 @@ early_stopping_patience = 0
 
 [model_params.train.gpt_config]
 n_layer = 6
+n_head = 12
+n_embd = 768
 
 [model_params.train.training_args_kwargs]
 logging_steps = 100
-save_steps = 100
+save_steps = 200
 eval_steps = 100
 save_total_limit = 1
 
@@ -39,9 +41,10 @@ num_bootstrap = 500
 sensitivity_max_col_nums = 5
 use_ks = false
 full_sensitivity = false
-frac = 0.15
-sensitivity_orig_frac_multiple = 4
+frac = 0.2
+sensitivity_orig_frac_multiple = 3
 orig_samples_rounds = 5
+load_from_best_mean_sensitivity = false
 
 
 [model_params.sample]

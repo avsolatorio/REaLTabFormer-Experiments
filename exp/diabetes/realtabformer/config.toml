@@ -1,5 +1,5 @@
-parent_dir = "exp/california/realtabformer"
-real_data_path = "data/repo/california/"
+parent_dir = "exp/diabetes/realtabformer"
+real_data_path = "data/repo/diabetes/"
 seed = 0
 device = "cuda"
 

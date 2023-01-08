@@ -4,10 +4,10 @@ seed = 0
 device = "cuda"
 
 [model_params]
-version = "0.0.2.3.1"
+version = "0.0.2.3.2"
 
 [model_params.meta]
-target_batch_size = 1024
+target_batch_size = 512
 frac_max_data = 5000
 checkpoints_dir = "rtf_checkpoints"
 samples_save_dir = "rtf_samples"
@@ -22,10 +22,12 @@ early_stopping_patience = 0
 
 [model_params.train.gpt_config]
 n_layer = 6
+n_head = 12
+n_embd = 768
 
 [model_params.train.training_args_kwargs]
 logging_steps = 100
-save_steps = 100
+save_steps = 200
 eval_steps = 100
 save_total_limit = 1
 
@@ -42,6 +44,7 @@ full_sensitivity = false
 frac = 0.2
 sensitivity_orig_frac_multiple = 3
 orig_samples_rounds = 5
+load_from_best_mean_sensitivity = false
 
 
 [model_params.sample]
