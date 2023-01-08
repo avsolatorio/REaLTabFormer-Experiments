@@ -94,13 +94,13 @@ def train_realtabformer(
             model_config_file
         )
 
+    experiment_save_checkpoints_path = experiment_save_path / "rtf_checkpoints"
     if (rtf_model.checkpoints_dir / "best-disc-model").exists():
-        shutil.copytree(rtf_model.checkpoints_dir / "best-disc-model", experiment_save_path)
-
+        shutil.copytree(rtf_model.checkpoints_dir / "best-disc-model", experiment_save_checkpoints_path, dirs_exist_ok=True)
     if (rtf_model.checkpoints_dir / "mean-best-disc-model").exists():
-        shutil.copytree(rtf_model.checkpoints_dir / "mean-best-disc-model", experiment_save_path)
+        shutil.copytree(rtf_model.checkpoints_dir / "mean-best-disc-model", experiment_save_checkpoints_path, dirs_exist_ok=True)
     if (rtf_model.checkpoints_dir / "last-epoch-model").exists():
-        shutil.copytree(rtf_model.checkpoints_dir / "last-epoch-model", experiment_save_path)
+        shutil.copytree(rtf_model.checkpoints_dir / "last-epoch-model", experiment_save_checkpoints_path, dirs_exist_ok=True)
 
     return rtf_model
 
