@@ -95,12 +95,14 @@ def train_realtabformer(
         )
 
     experiment_save_checkpoints_path = experiment_save_path / "rtf_checkpoints"
-    if (rtf_model.checkpoints_dir / "best-disc-model").exists():
-        shutil.copytree(rtf_model.checkpoints_dir / "best-disc-model", experiment_save_checkpoints_path, dirs_exist_ok=True)
-    if (rtf_model.checkpoints_dir / "mean-best-disc-model").exists():
-        shutil.copytree(rtf_model.checkpoints_dir / "mean-best-disc-model", experiment_save_checkpoints_path, dirs_exist_ok=True)
-    if (rtf_model.checkpoints_dir / "last-epoch-model").exists():
-        shutil.copytree(rtf_model.checkpoints_dir / "last-epoch-model", experiment_save_checkpoints_path, dirs_exist_ok=True)
+
+    for artefact in ["best-disc-model", "mean-best-disc-model", "last-epoch-model"]:
+        print("Copying artefacts from:", artefact)
+        if (rtf_model.checkpoints_dir / artefact).exists():
+            shutil.copytree(
+                rtf_model.checkpoints_dir / artefact,
+                experiment_save_checkpoints_path / artefact,
+                dirs_exist_ok=True)
 
     return rtf_model
 
