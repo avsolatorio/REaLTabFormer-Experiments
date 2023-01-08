@@ -48,7 +48,8 @@ def train_realtabformer(
     # Set up the model
     rtf_model = REaLTabFormer(**train_params, **dir_params, **training_args_kwargs)
 
-    if Path("/content").exists():
+    in_colab = Path("/content").exists()
+    if in_colab:
         print("In colab....")
         # We are in colab???
         rtf_model.training_args_kwargs["output_dir"] = (Path("/content") / f"{dir_params['checkpoints_dir'].name}-{real_data_path.name}").as_posix()
@@ -103,6 +104,12 @@ def train_realtabformer(
                 rtf_model.checkpoints_dir / artefact,
                 experiment_save_checkpoints_path / artefact,
                 dirs_exist_ok=True)
+
+    if in_colab:
+        # Clean up checkpoints when in colab
+        shutil.rmtree(
+            rtf_model.training_args_kwargs["output_dir"],
+            ignore_errors=True)
 
     return rtf_model
 
