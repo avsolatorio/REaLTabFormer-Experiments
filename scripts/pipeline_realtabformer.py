@@ -25,7 +25,8 @@ def main():
             parent_dir=raw_config['parent_dir'],
             real_data_path=raw_config['real_data_path'],
             model_params=raw_config['model_params'],
-            device=raw_config['device']
+            device=raw_config['device'],
+            config_file=args.config
         )
     # if args.sample:
     #     sample_realtabformer(

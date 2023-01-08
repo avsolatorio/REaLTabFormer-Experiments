@@ -1,4 +1,5 @@
 import json
+import shutil
 import joblib
 import torch
 from pathlib import Path
@@ -11,7 +12,8 @@ def train_realtabformer(
     parent_dir,
     real_data_path,
     model_params,
-    device = "cpu"
+    device = "cpu",
+    config_file = None,
 ):
     # Make sure that the rtf model specified in the config
     # is similar to the one installed in the environment.
@@ -74,12 +76,33 @@ def train_realtabformer(
         **fit_params
     )
 
-    rtf_model.save(path=parent_dir / "trained_model")
+    save_model_path = parent_dir / "trained_model"
+    rtf_model.save(path=save_model_path)
 
     rtf_model.sample(
         n_samples=sample_gen_size, gen_batch=128, device=fit_params["device"],
         save_samples=True
     )
+
+    # Save other artefacts
+    experiment_save_path = save_model_path / rtf_model.experiment_id
+    if config_file:
+        assert experiment_save_path.exists()
+        model_config_file = experiment_save_path / "config.toml"
+        shutil.copy2(
+            config_file,
+            model_config_file
+        )
+
+    if (rtf_model.checkpoints_dir / "best-disc-model").exists():
+        shutil.copytree(rtf_model.checkpoints_dir / "best-disc-model", experiment_save_path)
+
+    if (rtf_model.checkpoints_dir / "mean-best-disc-model").exists():
+        shutil.copytree(rtf_model.checkpoints_dir / "mean-best-disc-model", experiment_save_path)
+    if (rtf_model.checkpoints_dir / "last-epoch-model").exists():
+        shutil.copytree(rtf_model.checkpoints_dir / "last-epoch-model", experiment_save_path)
+
+    return rtf_model
 
 
 def sample_realtabformer():
