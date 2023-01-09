@@ -1,6 +1,8 @@
 import json
+import random
 import shutil
 import joblib
+import numpy as np
 import torch
 from pathlib import Path
 import realtabformer
@@ -122,5 +124,61 @@ def train_realtabformer(
     return rtf_model
 
 
-def sample_realtabformer():
-    pass
+def sample_realtabformer(
+    parent_dir,
+    real_data_path,
+    experiment_id: str = None,
+    n_dataset: int = 1,
+    device = "cpu",
+    gen_batch: int = 128,
+):
+    real_data_path = Path(real_data_path)
+    parent_dir = Path(parent_dir)
+
+    data_id = real_data_path.name
+
+    data_info = json.loads((real_data_path / "info.json").read_text())
+    sample_gen_size = data_info.get("train_size", 0) + data_info.get("val_size", 0) + data_info.get("test_size", 0)
+
+    save_model_path = parent_dir / "trained_model"
+
+    if experiment_id is None:
+        experiment_paths = [path.parent for path in save_model_path.glob("*/rtf_model.pt")]
+    else:
+        experiment_paths = [save_model_path / experiment_id]
+
+    for exp_path in experiment_paths:
+        rtf_model = REaLTabFormer.load_from_dir(exp_path)
+
+        experiment_id = rtf_model.experiment_id
+        exp_samples_dir: Path = rtf_model.samples_save_dir / experiment_id
+        exp_samples_dir.mkdir(parents=True, exist_ok=True)
+
+        for saved_type in ["best-disc-model", "mean-best-disc-model"]:
+            saved_path = (exp_samples_dir / "rtf_checkpoints" / saved_type)
+            if not saved_path.exists():
+                print(f"Skipping {saved_path}, not exists...")
+
+            rtf_model.model.from_pretrained(saved_path.as_posix())
+
+            saved_type = saved_type.replace("-", "_")
+            for seed in range(n_dataset):
+                sample_save_path = exp_samples_dir / f"rtf_sample-{experiment_id}-{saved_type}-seed_{seed}.pkl"
+                print(f"Sampling for {data_id}, exp::{experiment_id}, sv::{saved_type}, seed::{seed} / {n_dataset}")
+
+                if sample_save_path.exists():
+                    print(f"Sample already available for {sample_save_path}, skipping...")
+                    continue
+
+                np.random.seed(seed)
+                random.seed(seed)
+                torch.manual_seed(seed)
+
+                sample = rtf_model.sample(
+                    n_samples=sample_gen_size,
+                    gen_batch=gen_batch,
+                    device=device,
+                    save_samples=False
+                )
+
+                joblib.dump(sample, sample_save_path)
