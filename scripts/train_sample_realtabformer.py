@@ -64,6 +64,9 @@ def train_realtabformer(
         if "id" in train_data.columns:
             train_data = train_data.drop("id", axis=1)
 
+    if model_params["meta"].get("use_target_col", False):
+        fit_params["target_col"] = data_info["cols"]["target"]
+
     fit_params["frac"] = min(
         model_params["meta"]["frac_max_data"] / len(train_data),
         fit_params["frac"])
