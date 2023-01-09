@@ -8,9 +8,10 @@ version = "0.0.2.3.3"
 
 [model_params.meta]
 target_batch_size = 512
-frac_max_data = 10000
+frac_max_data = 5000
 checkpoints_dir = "rtf_checkpoints"
 samples_save_dir = "rtf_samples"
+use_target_col = true
 
 [model_params.train]
 model_type = "tabular"
@@ -33,7 +34,7 @@ save_total_limit = 1
 
 
 [model_params.fit]
-qt_max = 0.1
+qt_max = 0.05
 qt_interval = 100
 qt_interval_unique = 100
 n_critic = 5
@@ -41,11 +42,10 @@ num_bootstrap = 500
 sensitivity_max_col_nums = 5
 use_ks = false
 full_sensitivity = false
-frac = 0.165
-sensitivity_orig_frac_multiple = 4
+frac = 0.2
+sensitivity_orig_frac_multiple = 3
 orig_samples_rounds = 5
 load_from_best_mean_sensitivity = false
-# target_col = <not_set>
 
 
 [model_params.sample]
