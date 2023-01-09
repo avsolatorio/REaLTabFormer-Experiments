@@ -163,7 +163,9 @@ def sample_realtabformer(
 
             saved_type = saved_type.replace("-", "_")
             for seed in range(n_datasets):
-                sample_save_path = exp_samples_dir / f"rtf_sample-{experiment_id}-{saved_type}-seed_{seed}.pkl"
+                sample_save_path = exp_samples_dir / saved_type / f"rtf_sample-{experiment_id}-{saved_type}-seed_{seed}.pkl"
+                sample_save_path.parent.mkdir(parents=True, exist_ok=True)
+
                 print(f"Sampling for {data_id}, exp::{experiment_id}, sv::{saved_type}, seed::{seed} / {n_datasets}")
 
                 if sample_save_path.exists():
