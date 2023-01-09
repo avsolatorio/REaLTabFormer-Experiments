@@ -155,7 +155,7 @@ def sample_realtabformer(
         exp_samples_dir.mkdir(parents=True, exist_ok=True)
 
         for saved_type in ["best-disc-model", "mean-best-disc-model"]:
-            saved_path = (exp_samples_dir / "rtf_checkpoints" / saved_type)
+            saved_path = (exp_path / "rtf_checkpoints" / saved_type)
             if not saved_path.exists():
                 print(f"Skipping {saved_path}, not exists...")
 
