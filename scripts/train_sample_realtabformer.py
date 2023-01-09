@@ -158,6 +158,7 @@ def sample_realtabformer(
             saved_path = (exp_path / "rtf_checkpoints" / saved_type)
             if not (saved_path / "pytorch_model.bin").exists():
                 print(f"Skipping {saved_path}, not exists...")
+                continue
 
             rtf_model.model = rtf_model.model.from_pretrained(saved_path.as_posix())
 
