@@ -159,7 +159,7 @@ def sample_realtabformer(
             if not saved_path.exists():
                 print(f"Skipping {saved_path}, not exists...")
 
-            rtf_model.model.from_pretrained(saved_path.as_posix())
+            rtf_model.model = rtf_model.model.from_pretrained(saved_path.as_posix())
 
             saved_type = saved_type.replace("-", "_")
             for seed in range(n_datasets):
