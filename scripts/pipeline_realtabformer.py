@@ -15,7 +15,7 @@ def main():
     parser.add_argument('--change_val', action='store_true',  default=False)
 
     parser.add_argument('--experiment_id', type=str,  default=None)
-    parser.add_argument('--n_dataset', type=int,  default=10)
+    parser.add_argument('--n_datasets', type=int,  default=10)
     parser.add_argument('--gen_batch', type=int,  default=128)
 
     args = parser.parse_args()
@@ -37,7 +37,7 @@ def main():
             parent_dir=raw_config['parent_dir'],
             real_data_path=raw_config['real_data_path'],
             experiment_id=args.experiment_id,
-            n_dataset=args.n_dataset,
+            n_datasets=args.n_datasets,
             device=raw_config['device'],
             gen_batch=args.gen_batch,
         )
