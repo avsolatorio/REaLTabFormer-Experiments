@@ -20,6 +20,8 @@ epochs = 200
 train_size = 1
 random_state = 1029
 early_stopping_patience = 0
+numeric_precision = 6
+numeric_max_len = 12
 
 [model_params.train.gpt_config]
 n_layer = 6
