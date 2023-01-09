@@ -14,6 +14,10 @@ def main():
     parser.add_argument('--eval', action='store_true',  default=False)
     parser.add_argument('--change_val', action='store_true',  default=False)
 
+    parser.add_argument('--experiment_id', type=str,  default=None)
+    parser.add_argument('--n_dataset', type=int,  default=10)
+    parser.add_argument('--gen_batch', type=int,  default=128)
+
     args = parser.parse_args()
     raw_config = load_config(args.config)
     timer = zero.Timer()
@@ -28,17 +32,15 @@ def main():
             device=raw_config['device'],
             config_file=args.config
         )
-    # if args.sample:
-    #     sample_realtabformer(
-    #         synthesizer=ctabgan,
-    #         parent_dir=raw_config['parent_dir'],
-    #         real_data_path=raw_config['real_data_path'],
-    #         num_samples=raw_config['sample']['num_samples'],
-    #         model_params=raw_config['train_params'],
-    #         change_val=args.change_val,
-    #         seed=raw_config['sample']['seed'],
-    #         device=raw_config['device']
-    #     )
+    if args.sample:
+        sample_realtabformer(
+            parent_dir=raw_config['parent_dir'],
+            real_data_path=raw_config['real_data_path'],
+            experiment_id=args.experiment_id,
+            n_dataset=args.n_dataset,
+            device=raw_config['device'],
+            gen_batch=args.gen_batch,
+        )
 
     save_file(os.path.join(raw_config['parent_dir'], 'info.json'), os.path.join(raw_config['real_data_path'], 'info.json'))
 

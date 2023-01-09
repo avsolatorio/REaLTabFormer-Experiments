@@ -128,7 +128,7 @@ def sample_realtabformer(
     parent_dir,
     real_data_path,
     experiment_id: str = None,
-    n_dataset: int = 1,
+    n_datasets: int = 1,
     device = "cpu",
     gen_batch: int = 128,
 ):
@@ -162,9 +162,9 @@ def sample_realtabformer(
             rtf_model.model.from_pretrained(saved_path.as_posix())
 
             saved_type = saved_type.replace("-", "_")
-            for seed in range(n_dataset):
+            for seed in range(n_datasets):
                 sample_save_path = exp_samples_dir / f"rtf_sample-{experiment_id}-{saved_type}-seed_{seed}.pkl"
-                print(f"Sampling for {data_id}, exp::{experiment_id}, sv::{saved_type}, seed::{seed} / {n_dataset}")
+                print(f"Sampling for {data_id}, exp::{experiment_id}, sv::{saved_type}, seed::{seed} / {n_datasets}")
 
                 if sample_save_path.exists():
                     print(f"Sample already available for {sample_save_path}, skipping...")
