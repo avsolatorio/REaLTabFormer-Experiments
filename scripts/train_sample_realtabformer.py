@@ -156,7 +156,7 @@ def sample_realtabformer(
 
         for saved_type in ["best-disc-model", "mean-best-disc-model", "last-epoch-model"]:
             saved_path = (exp_path / "rtf_checkpoints" / saved_type)
-            if not saved_path.exists():
+            if not (saved_path / "pytorch_model.bin").exists():
                 print(f"Skipping {saved_path}, not exists...")
 
             rtf_model.model = rtf_model.model.from_pretrained(saved_path.as_posix())
