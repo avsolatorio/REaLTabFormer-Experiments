@@ -59,6 +59,11 @@ def train_realtabformer(
     train_data = joblib.load(real_data_path / "full_train.df.pkl")
     fit_params = model_params["fit"]
 
+    if data_info["id"].startswith("cardio"):
+        # Drop the "id" column if exists.
+        if "id" in train_data.columns:
+            train_data = train_data.drop("id", axis=1)
+
     fit_params["frac"] = min(
         model_params["meta"]["frac_max_data"] / len(train_data),
         fit_params["frac"])
