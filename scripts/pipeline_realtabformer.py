@@ -15,8 +15,8 @@ def main():
     parser.add_argument('--change_val', action='store_true',  default=False)
 
     parser.add_argument('--experiment_id', type=str,  default=None)
-    parser.add_argument('--n_datasets', type=int,  default=10)
-    parser.add_argument('--gen_batch', type=int,  default=128)
+    parser.add_argument('--n_datasets', type=int,  default=5)
+    parser.add_argument('--gen_batch', type=int,  default=256)
 
     args = parser.parse_args()
     raw_config = load_config(args.config)
