@@ -325,3 +325,58 @@ Variables annotated with `^` implies categorical data.
 ```
 pipenv run python scripts/split_train_test.py
 ```
+
+
+# Training the models
+
+```
+# ## Train and Gen samples
+# # Bizon Server GPU0
+export EXP_VERSION=0.0.1
+CUDA_VISIBLE_DEVICES=0 python scripts/pipeline_realtabformer.py --config exp/cardio/realtabformer/${EXP_VERSION}/config.toml --train && \
+CUDA_VISIBLE_DEVICES=0 python scripts/pipeline_realtabformer.py --config exp/cardio/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512 && \
+
+CUDA_VISIBLE_DEVICES=0 python scripts/pipeline_realtabformer.py --config exp/gesture/realtabformer/${EXP_VERSION}/config.toml --train && \
+CUDA_VISIBLE_DEVICES=0 python scripts/pipeline_realtabformer.py --config exp/gesture/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512 && \
+
+CUDA_VISIBLE_DEVICES=0 python scripts/pipeline_realtabformer.py --config exp/miniboone/realtabformer/${EXP_VERSION}/config.toml --train && \
+CUDA_VISIBLE_DEVICES=0 python scripts/pipeline_realtabformer.py --config exp/miniboone/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512
+
+
+# # Bizon Server GPU1
+export EXP_VERSION=0.0.1
+CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/house/realtabformer/${EXP_VERSION}/config.toml --train && \
+CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/house/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512 && \
+
+CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/higgs-small/realtabformer/${EXP_VERSION}/config.toml --train && \
+CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/higgs-small/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512 && \
+
+CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/fb-comments/realtabformer/${EXP_VERSION}/config.toml --train && \
+CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/fb-comments/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512
+
+# # Other
+export EXP_VERSION=0.0.1
+python scripts/pipeline_realtabformer.py --config exp/churn2/realtabformer/${EXP_VERSION}/config.toml --train && \
+python scripts/pipeline_realtabformer.py --config exp/churn2/realtabformer/${EXP_VERSION}/config.toml --sample && \
+
+python scripts/pipeline_realtabformer.py --config exp/diabetes/realtabformer/${EXP_VERSION}/config.toml --train && \
+python scripts/pipeline_realtabformer.py --config exp/diabetes/realtabformer/${EXP_VERSION}/config.toml --sample && \
+
+python scripts/pipeline_realtabformer.py --config exp/insurance/realtabformer/${EXP_VERSION}/config.toml --train && \
+python scripts/pipeline_realtabformer.py --config exp/insurance/realtabformer/${EXP_VERSION}/config.toml --sample && \
+
+python scripts/pipeline_realtabformer.py --config exp/abalone/realtabformer/${EXP_VERSION}/config.toml --train && \
+python scripts/pipeline_realtabformer.py --config exp/abalone/realtabformer/${EXP_VERSION}/config.toml --sample && \
+
+python scripts/pipeline_realtabformer.py --config exp/wilt/realtabformer/${EXP_VERSION}/config.toml --train && \
+python scripts/pipeline_realtabformer.py --config exp/wilt/realtabformer/${EXP_VERSION}/config.toml --sample && \
+
+python scripts/pipeline_realtabformer.py --config exp/buddy/realtabformer/${EXP_VERSION}/config.toml --train && \
+python scripts/pipeline_realtabformer.py --config exp/buddy/realtabformer/${EXP_VERSION}/config.toml --sample && \
+
+python scripts/pipeline_realtabformer.py --config exp/california/realtabformer/${EXP_VERSION}/config.toml --train && \
+python scripts/pipeline_realtabformer.py --config exp/california/realtabformer/${EXP_VERSION}/config.toml --sample && \
+
+python scripts/pipeline_realtabformer.py --config exp/adult/realtabformer/${EXP_VERSION}/config.toml --train
+python scripts/pipeline_realtabformer.py --config exp/adult/realtabformer/${EXP_VERSION}/config.toml --sample
+```
