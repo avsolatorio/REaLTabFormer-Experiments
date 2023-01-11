@@ -354,7 +354,7 @@ CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/hig
 CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/fb-comments/realtabformer/${EXP_VERSION}/config.toml --train && \
 CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/fb-comments/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512
 
-# # Other
+# # Other: https://colab.research.google.com/drive/1bkspGMSimJntE1zBGZsKv3t7RyjSlL28
 export EXP_VERSION=0.0.1
 python scripts/pipeline_realtabformer.py --config exp/churn2/realtabformer/${EXP_VERSION}/config.toml --train && \
 python scripts/pipeline_realtabformer.py --config exp/churn2/realtabformer/${EXP_VERSION}/config.toml --sample && \
