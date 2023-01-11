@@ -333,6 +333,7 @@ pipenv run python scripts/split_train_test.py
 # ## Train and Gen samples
 # # Bizon Server GPU0
 export EXP_VERSION=0.0.1
+
 CUDA_VISIBLE_DEVICES=0 python scripts/pipeline_realtabformer.py --config exp/cardio/realtabformer/${EXP_VERSION}/config.toml --train && \
 CUDA_VISIBLE_DEVICES=0 python scripts/pipeline_realtabformer.py --config exp/cardio/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512 && \
 
@@ -345,17 +346,22 @@ CUDA_VISIBLE_DEVICES=0 python scripts/pipeline_realtabformer.py --config exp/min
 
 # # Bizon Server GPU1
 export EXP_VERSION=0.0.1
+
+CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/fb-comments/realtabformer/${EXP_VERSION}/config.toml --train && \
+CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/fb-comments/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512 && \
+
 CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/house/realtabformer/${EXP_VERSION}/config.toml --train && \
 CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/house/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512 && \
 
 CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/higgs-small/realtabformer/${EXP_VERSION}/config.toml --train && \
-CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/higgs-small/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512 && \
+CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/higgs-small/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512
 
-CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/fb-comments/realtabformer/${EXP_VERSION}/config.toml --train && \
-CUDA_VISIBLE_DEVICES=1 python scripts/pipeline_realtabformer.py --config exp/fb-comments/realtabformer/${EXP_VERSION}/config.toml --sample --gen_batch=512
+
 
 # # Other: https://colab.research.google.com/drive/1bkspGMSimJntE1zBGZsKv3t7RyjSlL28
+# if [ `basename "$PWD"` = "REaLTabFormer-Experiments" ]; then echo "hello"; fi
 export EXP_VERSION=0.0.1
+
 python scripts/pipeline_realtabformer.py --config exp/churn2/realtabformer/${EXP_VERSION}/config.toml --train && \
 python scripts/pipeline_realtabformer.py --config exp/churn2/realtabformer/${EXP_VERSION}/config.toml --sample && \
 
@@ -377,6 +383,6 @@ python scripts/pipeline_realtabformer.py --config exp/buddy/realtabformer/${EXP_
 python scripts/pipeline_realtabformer.py --config exp/california/realtabformer/${EXP_VERSION}/config.toml --train && \
 python scripts/pipeline_realtabformer.py --config exp/california/realtabformer/${EXP_VERSION}/config.toml --sample && \
 
-python scripts/pipeline_realtabformer.py --config exp/adult/realtabformer/${EXP_VERSION}/config.toml --train
+python scripts/pipeline_realtabformer.py --config exp/adult/realtabformer/${EXP_VERSION}/config.toml --train && \
 python scripts/pipeline_realtabformer.py --config exp/adult/realtabformer/${EXP_VERSION}/config.toml --sample
 ```
