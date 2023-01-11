@@ -1,3 +1,6 @@
 parent_dir = "exp/miniboone/realtabformer"
 real_data_path = "data/repo/miniboone/"
+
+
+[model_params.train]
 batch_size = 128

@@ -12,6 +12,7 @@ numpy = "<1.24"
 tqdm = "*"
 tomli = "*"
 libzero = "*"
+toml = "*"
 
 [dev-packages]
 ipython = "*"
