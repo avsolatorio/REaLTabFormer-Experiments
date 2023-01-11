@@ -35,13 +35,19 @@ def copy_base_config():
 
 
 def gen_base_configs():
-    def _copy_base(data_id):
+    def _copy_base(data_id: str):
         # https://unix.stackexchange.com/a/428422
+        base_conf = (EXP_DIR / "base_rtf_config.toml")
+        data_conf = (EXP_DIR / data_id / "realtabformer" / "config.toml")
+
+        if not (base_conf.exists() and data_conf.exists()):
+            return
+
         with open((EXP_DIR / data_id / "realtabformer" / "base_config.toml"), "w") as fout:
             sub.check_call([
                 "comm", "-13",
-                (EXP_DIR / "base_rtf_config.toml").as_posix(),
-                (EXP_DIR / data_id / "realtabformer" / "config.toml").as_posix()],
+                base_conf.as_posix(),
+                data_conf.as_posix()],
                 stdout=fout)
 
     for data_path in EXP_DIR.glob("*"):
