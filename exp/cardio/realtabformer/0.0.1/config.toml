@@ -14,6 +14,7 @@ frac_max_data = 10000
 checkpoints_dir = "rtf_checkpoints"
 samples_save_dir = "rtf_samples"
 use_target_col = true
+drop_cols = [ "id",]
 
 [model_params.train]
 model_type = "tabular"

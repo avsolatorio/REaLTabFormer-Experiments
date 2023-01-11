@@ -1,2 +1,6 @@
 parent_dir = "exp/cardio/realtabformer"
 real_data_path = "data/repo/cardio/"
+
+
+[model_params.meta]
+drop_cols = ["id"]
