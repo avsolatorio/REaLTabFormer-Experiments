@@ -1,0 +1,2 @@
+parent_dir = "exp/fb-comments/realtabformer"
+real_data_path = "data/repo/fb-comments/"

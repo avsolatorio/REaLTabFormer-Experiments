@@ -1,0 +1,2 @@
+parent_dir = "exp/insurance/realtabformer"
+real_data_path = "data/repo/insurance/"
