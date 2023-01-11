@@ -24,6 +24,14 @@ def train_realtabformer(
 
     real_data_path = Path(real_data_path)
     parent_dir = Path(parent_dir)
+    save_model_path = parent_dir / "trained_model"
+
+    trained_model_path = list(save_model_path.glob("*/rtf_model.pt"))
+    assert len(trained_model_path) <= 1, f"Trained model for each experiment should be at most 1, found {len(trained_model_path)}!"
+
+    if len(trained_model_path) == 1:
+        print(f"Model for this experiment is already available...")
+        return
 
     data_info = json.loads((real_data_path / "info.json").read_text())
     sample_gen_size = data_info.get("train_size", 0) + data_info.get("val_size", 0) + data_info.get("test_size", 0)
@@ -92,7 +100,6 @@ def train_realtabformer(
         **fit_params
     )
 
-    save_model_path = parent_dir / "trained_model"
     rtf_model.save(path=save_model_path)
 
     rtf_model.sample(
