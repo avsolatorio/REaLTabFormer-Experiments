@@ -15,6 +15,7 @@ checkpoints_dir = "rtf_checkpoints"
 samples_save_dir = "rtf_samples"
 use_target_col = true
 drop_cols = []
+use_val = false
 
 [model_params.train]
 model_type = "tabular"
