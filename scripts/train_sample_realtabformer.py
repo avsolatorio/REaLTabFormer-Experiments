@@ -3,6 +3,7 @@ import random
 import shutil
 import joblib
 import numpy as np
+import pandas as pd
 import torch
 from pathlib import Path
 import realtabformer
@@ -59,13 +60,17 @@ def train_realtabformer(
         rtf_model.training_args_kwargs["output_dir"] = dir_params["checkpoints_dir"].as_posix()
 
     train_data = joblib.load(real_data_path / "full_train.df.pkl")
+
+    if model_params["meta"].get("use_val", False):
+        val_data = joblib.load(real_data_path / "full_val.df.pkl")
+        train_data = pd.concat([train_data, val_data])
+
+    drop_cols = model_params["meta"]["drop_cols"]
+    if drop_cols:
+        drop_cols = [col for col in drop_cols if col in train_data.columns]
+        train_data = train_data.drop(drop_cols, axis=1)
+
     fit_params = model_params["fit"]
-
-    if data_info["id"].startswith("cardio"):
-        # Drop the "id" column if exists.
-        if "id" in train_data.columns:
-            train_data = train_data.drop("id", axis=1)
-
     if model_params["meta"].get("use_target_col", False):
         fit_params["target_col"] = data_info["cols"]["target"]
 
