@@ -1,4 +1,4 @@
-parent_dir = "exp/adult/realtabformer"
+parent_dir = "exp/adult/realtabformer/0.0.1"
 real_data_path = "data/repo/adult/"
 seed = 0
 conf_version = "0.0.1"

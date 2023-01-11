@@ -1,4 +1,4 @@
-parent_dir = "exp/diabetes/realtabformer"
+parent_dir = "exp/diabetes/realtabformer/0.0.1"
 real_data_path = "data/repo/diabetes/"
 seed = 0
 conf_version = "0.0.1"

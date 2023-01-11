@@ -1,4 +1,4 @@
-parent_dir = "exp/churn2/realtabformer"
+parent_dir = "exp/churn2/realtabformer/0.0.1"
 real_data_path = "data/repo/churn2/"
 seed = 0
 conf_version = "0.0.1"

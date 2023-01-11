@@ -114,6 +114,9 @@ def gen_exp_config():
 
         parent_dir: Path = parent_dir / base_data_conf["conf_version"]
 
+        # Change the parent dir to the experiment version dir.
+        base_data_conf["parent_dir"] = f"{base_data_conf['parent_dir']}/{base_data_conf['conf_version']}"
+
         if parent_dir.exists():
             current_conf = toml.loads((parent_dir / "config.toml").read_text())
             assert current_conf == base_data_conf, f"Version dir and config exists, but the config content are different for {data_id}..."

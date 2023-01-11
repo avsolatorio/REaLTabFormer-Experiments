@@ -1,4 +1,4 @@
-parent_dir = "exp/wilt/realtabformer"
+parent_dir = "exp/wilt/realtabformer/0.0.1"
 real_data_path = "data/repo/wilt/"
 seed = 0
 conf_version = "0.0.1"

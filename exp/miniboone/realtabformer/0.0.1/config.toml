@@ -1,4 +1,4 @@
-parent_dir = "exp/miniboone/realtabformer"
+parent_dir = "exp/miniboone/realtabformer/0.0.1"
 real_data_path = "data/repo/miniboone/"
 seed = 0
 conf_version = "0.0.1"

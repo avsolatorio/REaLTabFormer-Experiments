@@ -1,4 +1,4 @@
-parent_dir = "exp/buddy/realtabformer"
+parent_dir = "exp/buddy/realtabformer/0.0.1"
 real_data_path = "data/repo/buddy/"
 seed = 0
 conf_version = "0.0.1"
