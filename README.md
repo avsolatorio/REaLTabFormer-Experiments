@@ -378,6 +378,16 @@ For this data generation, the relevant scripts used are:
 > :warning: **pandas and joblib are used to pickle and store the DataFrames**: to be sure, use the same pandas version (`pandas==1.5.2`) used to pickle the data when loading. Otherwise, an error may be raised.
 
 
+# Batch size
+
+We set the target batch size for datasets with training size:
+- below 1,000 to 32.
+- below 10,000 to 64.
+- else 512.
+
+Smaller batch size on small datasets could help in training.
+
+
 # Training the models
 
 ```
