@@ -1,2 +1,7 @@
 parent_dir = "exp/gesture/realtabformer"
 real_data_path = "data/repo/gesture/"
+
+
+[model_params.train]
+numeric_precision = 8
+numeric_max_len = 12
