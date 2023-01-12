@@ -9,7 +9,7 @@ exp_info = [ "0.0.2: This version adds the validation data to the training data.
 version = "0.0.2.3.7"
 
 [model_params.meta]
-target_batch_size = 512
+target_batch_size = 64
 frac_max_data = 10000
 checkpoints_dir = "rtf_checkpoints"
 samples_save_dir = "rtf_samples"
@@ -19,7 +19,7 @@ use_val = true
 
 [model_params.train]
 model_type = "tabular"
-batch_size = 128
+batch_size = 32
 epochs = 200
 train_size = 1
 random_state = 1029
