@@ -178,7 +178,13 @@ def move_old_trained_models(from_exp_version: str = None):
             for pname in ["trained_model", "rtf_samples", "rtf_checkpoints"]:
                 src_path = conf_v / pname
                 if src_path.exists():
-                    shutil.move(src_path, src_path.with_name(f"old-{src_path.name}"))
+                    dup = 1
+                    tgt_path = src_path.with_name(f"old-{src_path.name}")
+                    while tgt_path.exists():
+                        tgt_path = tgt_path.with_name(f"old{dup:02}-{src_path.name}")
+                        dup += 1
+
+                    shutil.move(src_path, tgt_path)
 
 
 def main():
