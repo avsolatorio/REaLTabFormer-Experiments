@@ -127,7 +127,7 @@ def gen_exp_config():
         (parent_dir / "config.toml").write_text(toml.dumps(base_data_conf))
 
 
-def update_rtf_version(from_rtf_version: str, to_rtf_version: str, from_conf_version: str = None):
+def update_rtf_version(from_rtf_version: str, to_rtf_version: str, from_exp_version: str = None):
 
     def _update_conf_version(conf_file):
         conf = conf_file.read_text()
@@ -149,8 +149,8 @@ def update_rtf_version(from_rtf_version: str, to_rtf_version: str, from_conf_ver
             if not conf_v.is_dir():
                 continue
 
-            if from_conf_version is not None:
-                if conf_v.name < from_conf_version:
+            if from_exp_version is not None:
+                if conf_v.name < from_exp_version:
                     continue
 
             conf_file = conf_v / "config.toml"
@@ -160,16 +160,41 @@ def update_rtf_version(from_rtf_version: str, to_rtf_version: str, from_conf_ver
             _update_conf_version(conf_file)
 
 
+def move_old_trained_models(from_exp_version: str = None):
+    for data_path in EXP_DIR.glob("*"):
+        if data_path.is_file():
+            continue
+
+        DATA_ID = data_path.name
+
+        for conf_v in (data_path / "realtabformer").glob("0.*"):
+            if not conf_v.is_dir():
+                continue
+
+            EXP_VERSION = conf_v.name
+            if EXP_VERSION < from_exp_version:
+                continue
+
+            for pname in ["trained_model", "rtf_samples", "rtf_checkpoints"]:
+                src_path = conf_v / pname
+                if src_path.exists():
+                    shutil.move(src_path, src_path.with_name(f"old-{src_path.name}"))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--copy_base_config", action="store_true", default=False)
     parser.add_argument("--gen_base_configs", action="store_true", default=False)
     parser.add_argument("--gen_exp_config", action="store_true", default=False)
     parser.add_argument("--update_rtf_version", action="store_true", default=False)
+    parser.add_argument("--move_old_trained_models", action="store_true", default=False)
+
+
 
     parser.add_argument("--from_rtf_version", default=None, type=str)
     parser.add_argument("--to_rtf_version", default=None, type=str)
-    parser.add_argument("--from_conf_version", default=None, type=str)
+    parser.add_argument("--from_exp_version", default=None, type=str)
+
 
 
     args = parser.parse_args()
@@ -183,12 +208,15 @@ def main():
     if args.gen_exp_config:
         gen_exp_config()
 
+    if args.move_old_trained_models:
+        move_old_trained_models(from_exp_version=args.from_exp_version)
+
     if args.update_rtf_version:
         assert (args.from_rtf_version and args.to_rtf_version)
         update_rtf_version(
             from_rtf_version=args.from_rtf_version,
             to_rtf_version=args.to_rtf_version,
-            from_conf_version=args.from_conf_version,
+            from_exp_version=args.from_exp_version,
         )
 
 
