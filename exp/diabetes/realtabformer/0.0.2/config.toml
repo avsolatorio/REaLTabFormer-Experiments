@@ -1,5 +1,5 @@
-parent_dir = "exp/DATA_ID/realtabformer"
-real_data_path = "data/repo/DATA_ID/"
+parent_dir = "exp/diabetes/realtabformer/0.0.2"
+real_data_path = "data/repo/diabetes/"
 seed = 0
 conf_version = "0.0.2"
 device = "cuda"
@@ -25,18 +25,6 @@ train_size = 1
 random_state = 1029
 early_stopping_patience = 0
 
-[model_params.train.gpt_config]
-n_layer = 6
-n_head = 12
-n_embd = 768
-
-[model_params.train.training_args_kwargs]
-logging_steps = 100
-save_steps = 500
-eval_steps = 100
-save_total_limit = 1
-
-
 [model_params.fit]
 qt_max = 0.05
 qt_interval = 100
@@ -51,6 +39,16 @@ sensitivity_orig_frac_multiple = 4
 orig_samples_rounds = 5
 load_from_best_mean_sensitivity = false
 
-
 [model_params.sample]
 gen_batch = 256
+
+[model_params.train.gpt_config]
+n_layer = 6
+n_head = 12
+n_embd = 768
+
+[model_params.train.training_args_kwargs]
+logging_steps = 100
+save_steps = 500
+eval_steps = 100
+save_total_limit = 1
