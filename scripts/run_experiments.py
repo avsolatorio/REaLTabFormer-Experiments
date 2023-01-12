@@ -16,12 +16,18 @@ def run_training_sampling(data_ids, cuda_device: int = None):
         for data_id in data_ids:
             print(version, data_id)
 
-            train_command = f"cd {PROJ_DIR} && {sys.executable} scripts/pipeline_realtabformer.py --config exp/{data_id}/realtabformer/{version}/config.toml --train"
-            sample_command = f"cd {PROJ_DIR} && {sys.executable} scripts/pipeline_realtabformer.py --config exp/{data_id}/realtabformer/{version}/config.toml --sample --gen_batch=512"
+            train_command = f"{sys.executable} scripts/pipeline_realtabformer.py --config exp/{data_id}/realtabformer/{version}/config.toml --train"
+            sample_command = f"{sys.executable} scripts/pipeline_realtabformer.py --config exp/{data_id}/realtabformer/{version}/config.toml --sample --gen_batch=512"
 
             if cuda_device is not None:
                 train_command = f"CUDA_VISIBLE_DEVICES={cuda_device} {train_command}"
                 sample_command = f"CUDA_VISIBLE_DEVICES={cuda_device} {sample_command}"
+
+            train_command = f"cd {PROJ_DIR} && {train_command}"
+            sample_command = f"cd {PROJ_DIR} && {sample_command}"
+
+            print(train_command)
+            print(sample_command)
 
             sub.call(train_command, shell=True)
             sub.call(sample_command, shell=True)
