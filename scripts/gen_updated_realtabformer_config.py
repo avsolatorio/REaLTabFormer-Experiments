@@ -172,7 +172,7 @@ def move_old_trained_models(from_exp_version: str = None):
                 continue
 
             EXP_VERSION = conf_v.name
-            if EXP_VERSION < from_exp_version:
+            if from_exp_version and EXP_VERSION < from_exp_version:
                 continue
 
             for pname in ["trained_model", "rtf_samples", "rtf_checkpoints"]:
