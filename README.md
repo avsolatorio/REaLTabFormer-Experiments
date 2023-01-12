@@ -327,6 +327,55 @@ pipenv run python scripts/split_train_test.py
 ```
 
 
+# Generating the datasets
+
+We benchmark our model for standard tabular data on datasets used in the https://arxiv.org/abs/2209.15421 paper.
+
+The [GitHub repo](https://github.com/rotot0/tab-ddpm) of the paper specifies how to download the dataset they used in the paper.
+
+```
+conda activate tddpm
+cd $PROJECT_DIR
+wget "https://www.dropbox.com/s/rpckvcs3vx7j605/data.tar?dl=0" -O data.tar
+tar -xvf data.tar
+```
+
+We can also train their models by creating a conda environment as specified below (taken from their repo).
+
+```
+export REPO_DIR=/path/to/the/code
+cd $REPO_DIR
+
+conda create -n tddpm python=3.9.7
+conda activate tddpm
+
+# if the following commands do not succeed, update conda
+conda env config vars set PYTHONPATH=${PYTHONPATH}:${REPO_DIR}
+conda env config vars set PROJECT_DIR=${REPO_DIR}
+
+pip install torch==1.10.1+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+pip install -r requirements.txt
+
+conda deactivate
+conda activate tddpm
+```
+
+For reproducibility, we store a copy of the data dump. Note that a copy of this (our project) repo is synced in Google Drive. This allows us to link the data and use it on Google Colab.
+
+Under the project directory, we clone the tab-ddpm repo. We then download the data as specified. Since the datasets included in the dump come in numpy stored object, we implemented a method to recreate the datasets and match, as much as possible, the train-val-test data in the data dump.
+
+For this data generation, the relevant scripts used are:
+- First, identify the actual index ids for the datasets.
+  - Refer to colab: [Tab-DDPM REaLTabFormer Data Recreation](https://colab.research.google.com/drive/1zFQSqJFhtXl8n8TOmNfYrwzR5rKNBER5)
+  - The output of this is already versioned in the repo.
+
+- Then generate the datasets with pickled DataFrames as output and other metadata. Use `scripts/prep_datasets.py`.
+  - Run as `pipenv run python scripts/prep_datasets.py`
+  - If datasets exist, it will raise an error. Clear the data first, then rerun as usual:
+    - `pipenv run python scripts/prep_datasets.py --clear`
+    - `pipenv run python scripts/prep_datasets.py`
+
+
 # Training the models
 
 ```
