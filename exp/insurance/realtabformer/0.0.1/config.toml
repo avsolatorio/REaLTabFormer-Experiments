@@ -6,7 +6,7 @@ device = "cuda"
 exp_info = "We use this experiment version as the baseline."
 
 [model_params]
-version = "0.0.2.3.6"
+version = "0.0.2.3.7"
 
 [model_params.meta]
 target_batch_size = 512

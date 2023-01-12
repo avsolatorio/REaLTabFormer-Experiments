@@ -573,11 +573,11 @@
         },
         "realtabformer": {
             "hashes": [
-                "sha256:09b9a2e129f713932b6b49325f633c1fc64c0bcfe8eb50bde0524c1d6aff641f",
-                "sha256:b65ba596791585dad3e7d7629546390c00229f811874dfcb59a0ff7947536852"
+                "sha256:02eb7d0a84391f324befdcbecbbba39d37eb11f4f661842f66055d54ad9b0105",
+                "sha256:12f046b5841299c03fc657d066c30f8762cf0a94bf816cd6759978403d8765bd"
             ],
             "index": "pypi",
-            "version": "==0.0.2.3.6"
+            "version": "==0.0.2.3.7"
         },
         "regex": {
             "hashes": [
@@ -675,11 +675,11 @@
         },
         "requests": {
             "hashes": [
-                "sha256:7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983",
-                "sha256:8fefa2a1a1365bf5520aac41836fbee479da67864514bdb821f31ce07ce65349"
+                "sha256:64299f4909223da747622c030b781c0d7811e359c37124b4bd368fb8c6518baa",
+                "sha256:98b1b2782e3c6c4904938b84c0eb932721069dfdb9134313beff7c83c2df24bf"
             ],
             "markers": "python_version >= '3.7' and python_version < '4'",
-            "version": "==2.28.1"
+            "version": "==2.28.2"
         },
         "responses": {
             "hashes": [

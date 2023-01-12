@@ -11,7 +11,7 @@ exp_info = [
 ]
 
 [model_params]
-version = "0.0.2.3.6"
+version = "0.0.2.3.7"
 
 [model_params.meta]
 target_batch_size = 512
