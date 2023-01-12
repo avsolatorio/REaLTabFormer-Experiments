@@ -1,2 +1,10 @@
 parent_dir = "exp/insurance/realtabformer"
 real_data_path = "data/repo/insurance/"
+
+
+[model_params.meta]
+target_batch_size = 32
+
+
+[model_params.train]
+batch_size = 16
