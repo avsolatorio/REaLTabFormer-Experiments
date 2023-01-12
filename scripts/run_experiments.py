@@ -49,9 +49,28 @@ def run_server_cuda1():
 
 
 def run_other():
+    run_other_small()
+    run_other_big()
+
+
+def run_other_small():
     run_training_sampling(
-        data_ids=["churn2", "diabetes", "insurance", "abalone", "wilt", "buddy", "california", "adult"],
+        data_ids=["churn2", "diabetes", "insurance", "abalone", "wilt"],
         cuda_device=None
+    )
+
+
+def run_other_big():
+    run_training_sampling(
+        data_ids=["buddy", "california", "adult"],
+        cuda_device=None
+    )
+
+
+def run_data_id(data_id, cuda_device: int = None):
+    run_training_sampling(
+        data_ids=[data_id],
+        cuda_device=cuda_device
     )
 
 
@@ -61,6 +80,13 @@ def main():
     parser.add_argument('--run_server_cuda0', action='store_true',  default=False)
     parser.add_argument('--run_server_cuda1', action='store_true',  default=False)
     parser.add_argument('--run_other', action='store_true',  default=False)
+    parser.add_argument('--run_other_small', action='store_true',  default=False)
+    parser.add_argument('--run_other_big', action='store_true',  default=False)
+    parser.add_argument('--run_data_id', action='store_true',  default=False)
+
+    parser.add_argument('--data_id', type=str,  default=None)
+    parser.add_argument('--cuda_device', type=int,  default=None)
+
 
     args = parser.parse_args()
 
@@ -70,6 +96,13 @@ def main():
         run_server_cuda1()
     elif args.run_other:
         run_other()
+    elif args.run_other_small:
+        run_other_small()
+    elif args.run_other_big:
+        run_other_big()
+    elif args.run_data_id:
+        assert args.data_id is not None
+        run_data_id(args.data_id, args.cuda_device)
 
 if __name__ == '__main__':
     main()
