@@ -5,7 +5,8 @@ from pathlib import Path
 
 
 EXP_DIR = Path(__file__).parent.parent / "exp"
-VERSIONS = [rl.name for rl in (EXP_DIR / "abalone" / "realtabformer").glob("0.*") if rl.is_dir()]
+VERSIONS = sorted([rl.name for rl in (EXP_DIR / "abalone" / "realtabformer").glob("0.*") if rl.is_dir()])
+
 
 def run_training_sampling(data_ids, cuda_device: int = None):
     assert "realtabformer-env" in sys.executable
@@ -13,6 +14,8 @@ def run_training_sampling(data_ids, cuda_device: int = None):
 
     for version in VERSIONS:
         for data_id in data_ids:
+            print(version, data_id)
+
             train_command = f"cd {PROJ_DIR} && {sys.executable} scripts/pipeline_realtabformer.py --config exp/{data_id}/realtabformer/{version}/config.toml --train"
             sample_command = f"cd {PROJ_DIR} && {sys.executable} scripts/pipeline_realtabformer.py --config exp/{data_id}/realtabformer/{version}/config.toml --sample --gen_batch=512"
 
