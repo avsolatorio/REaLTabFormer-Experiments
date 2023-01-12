@@ -1,2 +1,10 @@
 parent_dir = "exp/abalone/realtabformer"
 real_data_path = "data/repo/abalone/"
+
+
+[model_params.meta]
+target_batch_size = 64
+
+
+[model_params.train]
+batch_size = 32
