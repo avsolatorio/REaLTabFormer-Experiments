@@ -1,2 +1,10 @@
 parent_dir = "exp/diabetes/realtabformer"
 real_data_path = "data/repo/diabetes/"
+
+
+[model_params.meta]
+target_batch_size = 32
+
+
+[model_params.train]
+batch_size = 16
