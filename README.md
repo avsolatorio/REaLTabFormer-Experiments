@@ -375,6 +375,8 @@ For this data generation, the relevant scripts used are:
     - `pipenv run python scripts/prep_datasets.py --clear`
     - `pipenv run python scripts/prep_datasets.py`
 
+> :warning: **pandas and joblib are used to pickle and store the DataFrames**: to be sure, use the same pandas version (`pandas==1.5.2`) used to pickle the data when loading. Otherwise, an error may be raised.
+
 
 # Training the models
 
