@@ -36,8 +36,8 @@ def run_training_sampling(data_ids, cuda_device: int = None):
 
 def run_server_cuda0():
     run_training_sampling(
-        # data_ids=["cardio", "gesture", "miniboone"],
-        data_ids=["cardio", "gesture"],
+        data_ids=["cardio", "gesture", "miniboone"],
+        # data_ids=["cardio", "gesture"],
         # data_ids=["cardio", "miniboone"],
         cuda_device=0
     )
