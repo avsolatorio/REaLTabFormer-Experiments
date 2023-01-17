@@ -5,15 +5,16 @@ from pathlib import Path
 
 
 EXP_DIR = Path(__file__).parent.parent / "exp"
-VERSIONS = sorted([rl.name for rl in (EXP_DIR / "abalone" / "realtabformer").glob("0.*") if rl.is_dir()])
 
 
 def run_training_sampling(data_ids, cuda_device: int = None):
     assert "realtabformer-env" in sys.executable
     PROJ_DIR = EXP_DIR.parent.as_posix()
 
-    for version in VERSIONS:
-        for data_id in data_ids:
+    for data_id in data_ids:
+        VERSIONS = sorted([rl.name for rl in (EXP_DIR / data_id / "realtabformer").glob("0.*") if rl.is_dir()])
+
+        for version in VERSIONS:
             print(version, data_id)
 
             train_command = f"{sys.executable} scripts/pipeline_realtabformer.py --config exp/{data_id}/realtabformer/{version}/config.toml --train"
@@ -93,15 +94,20 @@ def main():
 
     if args.run_server_cuda0:
         run_server_cuda0()
-    elif args.run_server_cuda1:
+
+    if args.run_server_cuda1:
         run_server_cuda1()
-    elif args.run_other:
+
+    if args.run_other:
         run_other()
-    elif args.run_other_small:
+
+    if args.run_other_small:
         run_other_small()
-    elif args.run_other_big:
+
+    if args.run_other_big:
         run_other_big()
-    elif args.run_data_id:
+
+    if args.run_data_id:
         assert args.data_id is not None
         run_data_id(args.data_id, args.cuda_device)
 
