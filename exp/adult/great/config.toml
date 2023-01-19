@@ -1,5 +1,5 @@
-parent_dir = "exp/buddy/great"
-real_data_path = "data/repo/buddy/"
+parent_dir = "exp/adult/great"
+real_data_path = "data/repo/adult/"
 seed = 0
 device = "cuda"
 
