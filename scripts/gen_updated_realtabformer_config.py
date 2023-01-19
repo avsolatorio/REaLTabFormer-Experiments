@@ -94,7 +94,7 @@ def gen_base_configs():
         _copy_base(data_path.name)
 
 
-def gen_exp_config():
+def gen_exp_config(from_exp_version: str = None):
     base_conf = toml.loads(BASE_CONF_PATH.read_text())
 
     for data_path in EXP_DIR.glob("*"):
@@ -116,6 +116,10 @@ def gen_exp_config():
 
         # Change the parent dir to the experiment version dir.
         base_data_conf["parent_dir"] = f"{base_data_conf['parent_dir']}/{base_data_conf['conf_version']}"
+
+        if from_exp_version and from_exp_version > base_data_conf['conf_version']:
+            print(f"Skipping {base_data_conf['conf_version']}")
+            continue
 
         if parent_dir.exists():
             current_conf = toml.loads((parent_dir / "config.toml").read_text())
@@ -212,7 +216,7 @@ def main():
         gen_base_configs()
 
     if args.gen_exp_config:
-        gen_exp_config()
+        gen_exp_config(from_exp_version=args.from_exp_version)
 
     if args.move_old_trained_models:
         move_old_trained_models(from_exp_version=args.from_exp_version)

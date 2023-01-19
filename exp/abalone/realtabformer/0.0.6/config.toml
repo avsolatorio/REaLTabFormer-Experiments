@@ -1,21 +1,15 @@
-parent_dir = "exp/DATA_ID/realtabformer"
-real_data_path = "data/repo/DATA_ID/"
+parent_dir = "exp/abalone/realtabformer/0.0.6"
+real_data_path = "data/repo/abalone/"
 seed = 0
 conf_version = "0.0.6"
 device = "cuda"
-exp_info = [
-    "0.0.2: This version adds the validation data to the training data.",
-    "0.0.3: Change the fraction of data used for sensitivity computation.",
-    "0.0.4: Remove the validation data as part of the training data.",
-    "0.0.5: Change qt_max from 0.05 to 0.1",
-    "0.0.6: Update rtf version, revert to experiment version 0.0.2 and use numeric_nparts=1 and mask_rate=0.1",
-]
+exp_info = [ "0.0.2: This version adds the validation data to the training data.", "0.0.3: Change the fraction of data used for sensitivity computation.", "0.0.4: Remove the validation data as part of the training data.", "0.0.5: Change qt_max from 0.05 to 0.1", "0.0.6: Update rtf version, revert to experiment version 0.0.2 and use numeric_nparts=1 and mask_rate=0.1",]
 
 [model_params]
 version = "0.0.2.3.8"
 
 [model_params.meta]
-target_batch_size = 512
+target_batch_size = 64
 frac_max_data = 10000
 checkpoints_dir = "rtf_checkpoints"
 samples_save_dir = "rtf_samples"
@@ -25,25 +19,13 @@ use_val = true
 
 [model_params.train]
 model_type = "tabular"
-batch_size = 256
+batch_size = 32
 epochs = 200
 train_size = 1
 random_state = 1029
 early_stopping_patience = 0
 numeric_nparts = 1
 mask_rate = 0.1
-
-[model_params.train.gpt_config]
-n_layer = 6
-n_head = 12
-n_embd = 768
-
-[model_params.train.training_args_kwargs]
-logging_steps = 100
-save_steps = 500
-eval_steps = 100
-save_total_limit = 1
-
 
 [model_params.fit]
 qt_max = 0.05
@@ -59,6 +41,16 @@ sensitivity_orig_frac_multiple = 4
 orig_samples_rounds = 5
 load_from_best_mean_sensitivity = false
 
-
 [model_params.sample]
 gen_batch = 256
+
+[model_params.train.gpt_config]
+n_layer = 6
+n_head = 12
+n_embd = 768
+
+[model_params.train.training_args_kwargs]
+logging_steps = 100
+save_steps = 500
+eval_steps = 100
+save_total_limit = 1
