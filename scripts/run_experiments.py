@@ -99,11 +99,15 @@ def main():
     parser.add_argument('--run_data_id', action='store_true',  default=False)
 
     parser.add_argument('--data_id', type=str,  default=None)
-    parser.add_argument('--cuda_device', type=int,  default=None)
+    parser.add_argument('--cuda_device', type=str,  default=None)
     parser.add_argument('--from_exp_version', type=str,  default=None)
 
 
     args = parser.parse_args()
+
+    cuda_device = None
+    if args.cuda_device:
+        cuda_device = int(args.cuda_device)
 
     if args.run_server_cuda0:
         run_server_cuda0(args.from_exp_version)
@@ -122,7 +126,7 @@ def main():
 
     if args.run_data_id:
         assert args.data_id is not None
-        run_data_id(args.data_id, args.cuda_device, args.from_exp_version)
+        run_data_id(args.data_id, cuda_device, args.from_exp_version)
 
 if __name__ == '__main__':
     main()
