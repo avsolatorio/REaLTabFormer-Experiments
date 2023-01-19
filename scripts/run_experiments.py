@@ -11,6 +11,9 @@ def run_training_sampling(data_ids, cuda_device: int = None, from_exp_version: s
     assert "realtabformer-env" in sys.executable
     PROJ_DIR = EXP_DIR.parent.as_posix()
 
+    if cuda_device == "":
+        cuda_device = None
+
     for data_id in data_ids:
         VERSIONS = sorted([rl.name for rl in (EXP_DIR / data_id / "realtabformer").glob("0.*") if rl.is_dir()])
 
