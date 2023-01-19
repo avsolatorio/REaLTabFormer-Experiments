@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 numpy = "<1.24"
 be-great = {editable = true, ref = "main", git = "https://github.com/kathrinse/be_great"}
+tomli = "*"
+toml = "*"
+libzero = "*"
 
 [dev-packages]
 
