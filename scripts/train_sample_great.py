@@ -145,9 +145,9 @@ def train_great(
     parent_dir = Path(parent_dir)
     save_model_path = parent_dir / "trained_model"
 
-    # Make sure that the rtf model specified in the config
-    # is similar to the one installed in the environment.
-    model_params["version"] == be_great.__version__
+    # # Make sure that the rtf model specified in the config
+    # # is similar to the one installed in the environment.
+    # model_params["version"] == be_great.__version__
 
     if (save_model_path / "model.pt").exists():
         print(f"Model for this experiment is already available...")
