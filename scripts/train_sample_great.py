@@ -225,11 +225,18 @@ def sample_great(
         random.seed(seed)
         torch.manual_seed(seed)
 
+        sampling_rate = sample_params["sampling_rate"]
+
+        if (sample_params["sampling_batch"] * sampling_rate) > sample_gen_size:
+            # No need to oversample if a single set is sufficient.
+            # Reduce sampling rate.
+            sampling_rate = (sample_gen_size // sample_params["sampling_batch"]) + 1
+
         sample = wrap_great_sampling(
             great_model,
             target_samples=sample_gen_size,
             sampling_batch=sample_params["sampling_batch"],
-            sampling_rate=sample_params["sampling_rate"],
+            sampling_rate=sampling_rate,
             max_length=sample_params["max_length"],
             random_state=seed)
 
