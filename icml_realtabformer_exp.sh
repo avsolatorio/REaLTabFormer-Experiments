@@ -12,8 +12,8 @@ ${PYTHON_RTF_ENV} scripts/run_experiments.py --run_data_id --data_id=adult --fro
 
 ${PYTHON_RTF_ENV} scripts/run_experiments.py --run_data_id --data_id=abalone --from_exp_version=${FROM_EXP_VERSION} --cuda_device=${CUDA_DEVICE}
 
-${PYTHON_RTF_ENV} scripts/run_experiments.py --run_data_id --data_id=cardio --from_exp_version=${FROM_EXP_VERSION} --cuda_device=${CUDA_DEVICE}
-
 ${PYTHON_RTF_ENV} scripts/run_experiments.py --run_data_id --data_id=buddy --from_exp_version=${FROM_EXP_VERSION} --cuda_device=${CUDA_DEVICE}
 
 ${PYTHON_RTF_ENV} scripts/run_experiments.py --run_data_id --data_id=fb-comments --from_exp_version=${FROM_EXP_VERSION} --cuda_device=${CUDA_DEVICE}
+
+${PYTHON_RTF_ENV} scripts/run_experiments.py --run_data_id --data_id=cardio --from_exp_version=${FROM_EXP_VERSION} --cuda_device=${CUDA_DEVICE}
