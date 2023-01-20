@@ -13,7 +13,7 @@ use_val = true
 
 [model_params.train]
 llm = "distilgpt2"
-batch_size = 32
+batch_size = 16
 epochs = 100
 
 
