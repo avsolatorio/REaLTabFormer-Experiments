@@ -1,0 +1,30 @@
+parent_dir = "exp/fb-comments/big_great"
+real_data_path = "data/repo/fb-comments/"
+seed = 0
+device = "cuda"
+
+[model_params]
+version = "0.0.3"
+
+[model_params.meta]
+target_batch_size = 512
+drop_cols = []
+use_val = true
+
+[model_params.train]
+llm = "gpt2-medium"
+batch_size = 8
+epochs = 100
+
+
+[model_params.train.training_args_kwargs]
+logging_steps = 100
+save_steps = 500
+eval_steps = 100
+save_total_limit = 1
+
+
+[model_params.sample]
+sampling_batch = 64
+sampling_rate = 20
+max_length = 8192
