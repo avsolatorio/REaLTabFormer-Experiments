@@ -3,7 +3,7 @@ real_data_path = "data/repo/house/"
 seed = 0
 conf_version = "0.0.6.4"
 device = "cuda"
-exp_info = [ "0.0.2: This version adds the validation data to the training data.", "0.0.3: Change the fraction of data used for sensitivity computation.", "0.0.4: Remove the validation data as part of the training data.", "0.0.5: Change qt_max from 0.05 to 0.1", "0.0.6: Update rtf version, revert to experiment version 0.0.2 and use numeric_nparts=1 and mask_rate=0.1", "0.0.6.4: Ablation of 0.0.6: do not use auto-overfitting detection, set n_critic=0 and train_size=0.8 and mask_rate=0",]
+exp_info = [ "0.0.2: This version adds the validation data to the training data.", "0.0.3: Change the fraction of data used for sensitivity computation.", "0.0.4: Remove the validation data as part of the training data.", "0.0.5: Change qt_max from 0.05 to 0.1", "0.0.6: Update rtf version, revert to experiment version 0.0.2 and use numeric_nparts=1 and mask_rate=0.1", "0.0.6.4: Ablation of 0.0.6: do not use auto-overfitting detection, set n_critic=0 and train_size=0.8 and mask_rate=0 and save_steps=100 and early_stopping_patience=5 and save_total_limit=6",]
 
 [model_params]
 version = "0.0.2.3.8"
@@ -23,7 +23,7 @@ batch_size = 256
 epochs = 200
 train_size = 0.8
 random_state = 1029
-early_stopping_patience = 0
+early_stopping_patience = 5
 numeric_nparts = 1
 mask_rate = 0
 
@@ -51,6 +51,6 @@ n_embd = 768
 
 [model_params.train.training_args_kwargs]
 logging_steps = 100
-save_steps = 500
+save_steps = 100
 eval_steps = 100
-save_total_limit = 1
+save_total_limit = 6
