@@ -24,6 +24,12 @@ Then activate the REaLTabFormer-Experiments shell (pipenv shell).
 
 Run `python scripts/gen_updated_realtabformer_config.py --gen_exp_config` to generate the conf files for all data.
 
+Run the experiments:
+
+```
+cd realtabformer-env && pipenv shell && cd ../
+python scripts/run_experiments.py --run_icml_ablation --from_exp_version=0.0.6.1 --cuda_device=1
+```
 
 ## Data copying measure
 
