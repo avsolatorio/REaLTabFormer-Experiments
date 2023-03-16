@@ -107,25 +107,28 @@ def train_realtabformer(
         save_samples=True
     )
 
-    # Save other artefacts
-    experiment_save_path = save_model_path / rtf_model.experiment_id
-    if config_file:
-        assert experiment_save_path.exists()
-        model_config_file = experiment_save_path / "config.toml"
-        shutil.copy2(
-            config_file,
-            model_config_file
-        )
+    if fit_params["n_critic"] > 0:
+        # We only have artefacts for n_critic > 0.
+        # Save other artefacts
 
-    experiment_save_checkpoints_path = experiment_save_path / "rtf_checkpoints"
+        experiment_save_path = save_model_path / rtf_model.experiment_id
+        if config_file:
+            assert experiment_save_path.exists()
+            model_config_file = experiment_save_path / "config.toml"
+            shutil.copy2(
+                config_file,
+                model_config_file
+            )
 
-    for artefact in ["best-disc-model", "mean-best-disc-model", "last-epoch-model"]:
-        print("Copying artefacts from:", artefact)
-        if (rtf_model.checkpoints_dir / artefact).exists():
-            shutil.copytree(
-                rtf_model.checkpoints_dir / artefact,
-                experiment_save_checkpoints_path / artefact,
-                dirs_exist_ok=True)
+        experiment_save_checkpoints_path = experiment_save_path / "rtf_checkpoints"
+
+        for artefact in ["best-disc-model", "mean-best-disc-model", "last-epoch-model"]:
+            print("Copying artefacts from:", artefact)
+            if (rtf_model.checkpoints_dir / artefact).exists():
+                shutil.copytree(
+                    rtf_model.checkpoints_dir / artefact,
+                    experiment_save_checkpoints_path / artefact,
+                    dirs_exist_ok=True)
 
     if in_colab:
         # Clean up checkpoints when in colab
@@ -166,14 +169,23 @@ def sample_realtabformer(
         exp_samples_dir: Path = rtf_model.samples_save_dir / experiment_id
         exp_samples_dir.mkdir(parents=True, exist_ok=True)
 
-        # for saved_type in ["best-disc-model", "mean-best-disc-model", "last-epoch-model"]:
-        for saved_type in ["best-disc-model"]:
-            saved_path = (exp_path / "rtf_checkpoints" / saved_type)
-            if not (saved_path / "pytorch_model.bin").exists():
-                print(f"Skipping {saved_path}, not exists...")
-                continue
+        # for saved_type in ["saved", "best-disc-model", "mean-best-disc-model", "last-epoch-model"]:
+        for ix, saved_type in enumerate(["saved", "best-disc-model"]):
+            if saved_type == "saved":
+                assert ix == 0, "The saved saved_type must be the first option!"
 
-            rtf_model.model = rtf_model.model.from_pretrained(saved_path.as_posix())
+                if (exp_path / "rtf_checkpoints" / "best-disc-model" / "pytorch_model.bin").exists():
+                    print(f"Skipping {saved_type}, because 'best-disc-model' exists...")
+                    continue
+
+            saved_path = (exp_path / "rtf_checkpoints" / saved_type)
+            if saved_type != "saved":
+                if not (saved_path / "pytorch_model.bin").exists():
+                    print(f"Skipping {saved_path}, not exists...")
+                    continue
+
+                # Load only the weights when the model is not the one that is saved.
+                rtf_model.model = rtf_model.model.from_pretrained(saved_path.as_posix())
 
             saved_type = saved_type.replace("-", "_")
             for seed in range(n_datasets):
