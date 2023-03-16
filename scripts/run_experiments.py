@@ -102,7 +102,7 @@ def run_icml_ablation(cuda_device: int = None, from_exp_version: str = None, to_
     mid = ["buddy", "california", "adult"]
     large = ["fb-comments"]
 
-    data_ids = small + mid + large
+    data_ids = small + mid  # + large
 
     run_training_sampling(
         data_ids=data_ids,
