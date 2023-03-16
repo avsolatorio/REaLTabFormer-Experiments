@@ -5,13 +5,28 @@ We document here the planned experiments that we will undertake for the ICML rev
 ## Additional experiments
 
 First, we will need to train the models using the following variations:
-1. Set the target mask rate to:
+
+1. (0.0.6) mask_rate=0.1 (done)
+   1. (0.0.6.00) mask_rate=0 (0.0.6.1)
+   2. (0.0.6.05) mask_rate=0.05
+   3. (0.0.6.15) mask_rate=0.15
+   4. (0.0.6.20) mask_rate=0.2 (0.0.6.2)
+   5. (0.0.6.25) mask_rate=0.25
+2. (0.0.7) Remove the use of overfitting auto-detection (mask_rate=0.1). (0.0.6.3)
+   1. (0.0.7.00) mask_rate=0 (0.0.6.4)
+   2. (0.0.7.05) mask_rate=0.05
+   3. (0.0.7.15) mask_rate=0.15
+   4. (0.0.7.20) mask_rate=0.2
+   5. (0.0.7.25) mask_rate=0.25
+
+<!-- 1. Set the target mask rate to:
    1. (0.0.6.1) mask_rate=0
    2. (0.0.6.2) mask_rate=0.2
    3. (0.0.6) mask_rate=0.1 (done)
    4. (0.0.6.5) mask_rate=0.05
 2. (0.0.6.3) Remove the use of overfitting auto-detection.
 3. (0.0.6.4) Remove the use of overfitting auto-detection and set the target mask rate to 0.
+ -->
 
 We generate sub-versions of experiment 0.0.6 for all of these configurations.
 
