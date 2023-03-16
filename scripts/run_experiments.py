@@ -88,6 +88,20 @@ def run_data_id(data_id, cuda_device: int = None, from_exp_version: str = None):
     )
 
 
+def run_icml_ablation(cuda_device: int = None, from_exp_version: str = None):
+    small = ["abalone", "diabetes"]
+    mid = ["buddy", "california", "adult"]
+    large = ["fb-comments"]
+
+    data_ids = small + mid + large
+
+    run_training_sampling(
+        data_ids=data_ids,
+        cuda_device=cuda_device,
+        from_exp_version=from_exp_version,
+    )
+
+
 def main():
     parser = argparse.ArgumentParser()
 
@@ -97,6 +111,7 @@ def main():
     parser.add_argument('--run_other_small', action='store_true',  default=False)
     parser.add_argument('--run_other_big', action='store_true',  default=False)
     parser.add_argument('--run_data_id', action='store_true',  default=False)
+    parser.add_argument('--run_icml_ablation', action='store_true',  default=False)
 
     parser.add_argument('--data_id', type=str,  default=None)
     parser.add_argument('--cuda_device', type=str,  default=None)
@@ -127,6 +142,10 @@ def main():
     if args.run_data_id:
         assert args.data_id is not None
         run_data_id(args.data_id, cuda_device, args.from_exp_version)
+
+    if args.run_icml_ablation:
+        run_icml_ablation(cuda_device, args.from_exp_version)
+
 
 if __name__ == '__main__':
     main()
